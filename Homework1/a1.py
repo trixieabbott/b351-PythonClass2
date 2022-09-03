@@ -17,7 +17,14 @@ import math
 # (1) Write a recursive function to compute the nth fibonacci number
 
 def fib(n):
-    raise NotImplementedError
+    if n == 1:
+        return 1
+    # base case 2
+    if n == 2:
+        return 1
+    # inductive step
+    else:
+        return fib(n-1) + fib(n-2)
 
 
 
@@ -28,7 +35,9 @@ def fib(n):
 # (1) Write a function which returns a tuple of the first and last items in a given sequence
 
 def firstLast(seq):
-    raise NotImplementedError
+    return (seq[0],seq[len(seq)-1])
+
+
 
 
 
