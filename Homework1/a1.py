@@ -101,9 +101,7 @@ def iterSumNodes(root):
 # and returns a new function applying the inner then the outer function to a value
 
 def compose(f_outer, f_inner):
-    raise NotImplementedError
-    f = f_outer.f_inner
-    return f
+    return f_outer(f_inner)
 
 
 
@@ -120,6 +118,7 @@ def yieldTwice(iterable):
         result.append(item)
         result.append(item)
     return result
+    # did not account for other types than list
 
 
 
@@ -146,7 +145,13 @@ def toHex(value, minbytes=0, maxbytes=-1):
 #     For example, yieldAllValid([255, 16, 'foo', 3], toHex) => 'ff', '10', '3'
 
 def yieldAllValid(iterable, function):
-    raise NotImplementedError
+    result = []
+    for item in iterable:
+        try:
+            result.append(toHex(item))
+        except ValueError:
+            result = result
+    return result
 
 
 
