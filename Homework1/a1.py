@@ -35,9 +35,10 @@ def fib(n):
 # (1) Write a function which returns a tuple of the first and last items in a given sequence
 
 def firstLast(seq):
-    return (seq[0],seq[len(seq)-1])
-    # not quite right... 
-    # why does [e] return (e,)
+    if len(seq) == 1:
+        return (seq[0],)
+    else:
+        return (seq[0],seq[len(seq)-1])
 
 
 
@@ -63,15 +64,11 @@ exampleTree = Node(1,[Node(2,[]),Node(3,[Node(4,[Node(5,[]),Node(6,[Node(7,[])])
 # (1) Write a function to calculate the sum of every node in a tree (recursively)
 
 def recSumNodes(root):
-    raise NotImplementedError
-    if root == None:
-        return 0
-    else:
-        print(root.value)
-        print(root.subnodes)
-        return root.value + recSumNodes(root.subnodes)
-    #got stuck
-
+    sum = root.value
+    for item in root.subnodes:
+        sum = sum + recSumNodes(item)
+    return sum
+    
 
 
 #################################
@@ -82,13 +79,12 @@ def recSumNodes(root):
 # (1) Write a function to calculate the sum of every node in a tree (iteratively)
 
 def iterSumNodes(root):
-    sum = root.value
-    for item in root.subnodes:
-        #print(sum)
-        sum += item.value
+    raise NotImplementedError
+    sum = 0
+    while root:
+        sum += root.value
+        root = root.subnodes
     return sum
-
-    #also wrong
 
 
 
@@ -101,8 +97,10 @@ def iterSumNodes(root):
 # and returns a new function applying the inner then the outer function to a value
 
 def compose(f_outer, f_inner):
-    return f_outer(f_inner)
-
+    raise NotImplementedError
+    f = lambda x: f_outer
+    g = lambda y: f_inner
+    return f(g)
 
 
 #################################
@@ -115,9 +113,8 @@ def compose(f_outer, f_inner):
 def yieldTwice(iterable):
     result = []
     for item in iterable:
-        result.append(item)
-        result.append(item)
-    return result
+        yield item
+        yield item
     # did not account for other types than list
 
 
@@ -164,7 +161,12 @@ def yieldAllValid(iterable, function):
 # (1) Create a string which has each level of the tree on a new line
 
 def treeToString(root):
-    raise NotImplementedError
+    result = str(root.value)
+    for item in root.subnodes:
+        result += "\n"
+        result += str(treeToString(item))
+    return result
+    #not done yet
 
 
 if __name__ == '__main__':
