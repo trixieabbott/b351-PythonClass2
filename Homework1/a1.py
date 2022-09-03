@@ -36,9 +36,8 @@ def fib(n):
 
 def firstLast(seq):
     return (seq[0],seq[len(seq)-1])
-
-
-
+    # not quite right... 
+    # why does [e] return (e,)
 
 
 
@@ -65,8 +64,13 @@ exampleTree = Node(1,[Node(2,[]),Node(3,[Node(4,[Node(5,[]),Node(6,[Node(7,[])])
 
 def recSumNodes(root):
     raise NotImplementedError
-
-
+    if root == None:
+        return 0
+    else:
+        print(root.value)
+        print(root.subnodes)
+        return root.value + recSumNodes(root.subnodes)
+    #got stuck
 
 
 
@@ -78,8 +82,13 @@ def recSumNodes(root):
 # (1) Write a function to calculate the sum of every node in a tree (iteratively)
 
 def iterSumNodes(root):
-    raise NotImplementedError
+    sum = root.value
+    for item in root.subnodes:
+        #print(sum)
+        sum += item.value
+    return sum
 
+    #also wrong
 
 
 
@@ -93,8 +102,8 @@ def iterSumNodes(root):
 
 def compose(f_outer, f_inner):
     raise NotImplementedError
-
-
+    f = f_outer.f_inner
+    return f
 
 
 
@@ -106,9 +115,11 @@ def compose(f_outer, f_inner):
 #     For example, yieldTwice([1, 2, 3]) => 1, 1, 2, 2, 3, 3
 
 def yieldTwice(iterable):
-    raise NotImplementedError
-
-
+    result = []
+    for item in iterable:
+        result.append(item)
+        result.append(item)
+    return result
 
 
 
