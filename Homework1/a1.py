@@ -142,15 +142,11 @@ def toHex(value, minbytes=0, maxbytes=-1):
 #     For example, yieldAllValid([255, 16, 'foo', 3], toHex) => 'ff', '10', '3'
 
 def yieldAllValid(iterable, function):
-    result = []
     for item in iterable:
         try:
-            result.append(toHex(item))
+            yield toHex(item)
         except ValueError:
-            result = result
-    return result
-
-
+            pass
 
 
 
