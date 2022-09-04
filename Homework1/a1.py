@@ -9,6 +9,7 @@
 #################################
 
 import math
+from re import X
 
 #################################
 # Problem 1
@@ -105,10 +106,7 @@ def iterSumNodes(root):
 
 def compose(f_outer, f_inner):
     raise NotImplementedError
-    f = f_outer
-    g = f_inner
-    return f(g)
-
+    return (f_outer)(f_inner)
 
 #################################
 # Problem 6
@@ -151,7 +149,7 @@ def toHex(value, minbytes=0, maxbytes=-1):
 def yieldAllValid(iterable, function):
     for item in iterable:
         try:
-            yield toHex(item)
+            yield function(item)
         except ValueError:
             pass
 
