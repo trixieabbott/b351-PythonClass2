@@ -79,11 +79,18 @@ def recSumNodes(root):
 # (1) Write a function to calculate the sum of every node in a tree (iteratively)
 
 def iterSumNodes(root):
-    raise NotImplementedError
+    stack = []
     sum = 0
     while root:
         sum += root.value
-        root = root.subnodes
+        if root.subnodes:
+            if len(root.subnodes) == 2:
+                stack.append(root.subnodes[1])
+            root = root.subnodes[0]
+        elif stack:
+            root = stack.pop()
+        else:
+            break        
     return sum
 
 
@@ -98,8 +105,8 @@ def iterSumNodes(root):
 
 def compose(f_outer, f_inner):
     raise NotImplementedError
-    f = lambda x: f_outer
-    g = lambda y: f_inner
+    f = f_outer
+    g = f_inner
     return f(g)
 
 
