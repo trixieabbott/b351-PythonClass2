@@ -106,7 +106,8 @@ def iterSumNodes(root):
 
 def compose(f_outer, f_inner):
     raise NotImplementedError
-    return (f_outer)(f_inner)
+    # could not figure out
+    #return (f_outer)(f_inner)
 
 #################################
 # Problem 6
@@ -120,7 +121,6 @@ def yieldTwice(iterable):
     for item in iterable:
         yield item
         yield item
-    # did not account for other types than list
 
 
 
@@ -167,7 +167,6 @@ def treeToString(root):
         result += "\n"
         result += str(treeToString(item))
     return result
-    #not done yet
 
 
 if __name__ == '__main__':
