@@ -13,14 +13,14 @@ class Board():
     def __init__(self, filename):
 
         # initialize all of the variables
-        self.n2 = 0
-        self.n = 0
-        self.spaces = 0
-        self.board = None
-        self.valsInRows = None
+        self.n2 = 0 #length of one side of the board - 9??
+        self.n = 0 #length of one side of an inner square
+        self.spaces = 0 # total number of cells in sodoku board - 81 cells
+        self.board = None # dictionary containing the mapping r,c -> k where k is from 1 to n^2 or 1 to 9, false if k is empty
+        self.valsInRows = None # list that represents mapping of r -> vals where r is row index and vals is set of values currently 1 
         self.valsInCols = None
-        self.valsInBoxes = None
-        self.unsolvedSpaces = None
+        self.valsInBoxes = None # 
+        self.unsolvedSpaces = None # set of tuples that have unsolved spaces or k = false
 
         # load the file and initialize the in-memory board with the data
         self.loadSudoku(filename)
@@ -112,6 +112,7 @@ class Board():
 
     # makes a move, records it in its row, col, and box, and removes the space from unsolvedSpaces
     def makeMove(self, space, value):
+
         raise NotImplementedError
 
     # removes the move, its record in its row, col, and box, and adds the space back to unsolvedSpaces
@@ -157,6 +158,12 @@ class Solver:
 if __name__ == "__main__":
     # change this to the input file that you'd like to test
     board = Board('tests/example.csv')
+    # printing the board first
+    board.print()
+
+
+
+    #now we are solving the board
     s = Solver()
     s.solveBoard(board)
     board.print()
