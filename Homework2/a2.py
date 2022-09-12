@@ -250,7 +250,9 @@ class Solver:
     # returns True if a solution exists and False if one does not
     def solveBoard(self, board):
         #base case is when unsolved spaces is empty??
+        print(len(board.unsolvedSpaces))
         if len(board.unsolvedSpaces) == 0:
+            print("done")
             return board
 
         #inductive step
@@ -263,6 +265,7 @@ class Solver:
                 if board.isValidMove(rowcol,num):
                     #if it's valid, use assign num to rowcol using makeMove
                     board.makeMove(rowcol,num)
+            
                     return self.solveBoard(board)
 
 
@@ -271,6 +274,8 @@ if __name__ == "__main__":
     board = Board('tests/example.csv')
     # printing the board first
     board.print()
+    print("\n")
+    print(board.unsolvedSpaces)
 
 
 
@@ -282,3 +287,5 @@ if __name__ == "__main__":
     print("\n\n\n")
     #lets print the new board
     board.print()
+    print("\n")
+    print(board.unsolvedSpaces)
