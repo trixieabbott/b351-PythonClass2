@@ -14,7 +14,7 @@ class Board():
     def __init__(self, filename):
 
         # initialize all of the variables
-        self.n2 = 0 #length of one side of the board - 9??
+        self.n2 = 0 #length of one side of the board
         self.n = 0 #length of one side of an inner square
         self.spaces = 0 # total number of cells in sodoku board - 81 cells
         # always change board for adding a new value
@@ -22,7 +22,7 @@ class Board():
         # always change these 3 for recording value is now in appropriate row, column, box
         self.valsInRows = None # list that represents mapping of r -> vals where r is row index and vals is set of values currently 1 
         self.valsInCols = None # list mapping of c -> vals where c is the column index and vals is a set of the values in corresponding column
-        self.valsInBoxes = None # list that is a mapping of b -> vals wherer b is the inner box index and vals is a set of the values currently ??
+        self.valsInBoxes = None # list that is a mapping of b -> vals wherer b is the inner box index and vals is a set of the values currently
         # remove space from unsolved spaces
         self.unsolvedSpaces = None # set of tuples that have unsolved spaces or k = false
 
@@ -249,7 +249,7 @@ class Solver:
 
     # returns True if a solution exists and False if one does not
     def solveBoard(self, board):
-        #base case is when unsolved spaces is empty??
+        #base case is when unsolved spaces is empty?
         if len(board.unsolvedSpaces) == 0:
             print("done")
             return board
@@ -270,7 +270,7 @@ class Solver:
 
 if __name__ == "__main__":
     # change this to the input file that you'd like to test
-    board = Board('tests/test-1-easy/00.csv')
+    board = Board('tests/test-2-medium/80.csv')
     # printing the board first
     board.print()
     print("\n this is the number of unsolved spaces left:")
@@ -288,3 +288,6 @@ if __name__ == "__main__":
     board.print()
     print("\n this is the number of unsolved spaces left:")
     print(len(board.unsolvedSpaces))
+
+    #questions - my solver only works on easy, because it only goes once over
+    #i need to use undoMove!!
