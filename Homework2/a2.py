@@ -270,7 +270,7 @@ class Solver:
 
 if __name__ == "__main__":
     # change this to the input file that you'd like to test
-    board = Board('tests/test-2-medium/80.csv')
+    board = Board('tests/test-1-easy/80.csv')
     # printing the board first
     board.print()
     print("\n this is the number of unsolved spaces left:")
