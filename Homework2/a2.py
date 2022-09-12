@@ -4,6 +4,7 @@
 
 import csv
 import itertools
+from math import fabs
 
 class Board():
 
@@ -16,10 +17,13 @@ class Board():
         self.n2 = 0 #length of one side of the board - 9??
         self.n = 0 #length of one side of an inner square
         self.spaces = 0 # total number of cells in sodoku board - 81 cells
+        # always change board for adding a new value
         self.board = None # dictionary containing the mapping r,c -> k where k is from 1 to n^2 or 1 to 9, false if k is empty
+        # always change these 3 for recording value is now in appropriate row, column, box
         self.valsInRows = None # list that represents mapping of r -> vals where r is row index and vals is set of values currently 1 
-        self.valsInCols = None
-        self.valsInBoxes = None # 
+        self.valsInCols = None # list mapping of c -> vals where c is the column index and vals is a set of the values in corresponding column
+        self.valsInBoxes = None # list that is a mapping of b -> vals wherer b is the inner box index and vals is a set of the values currently ??
+        # remove space from unsolved spaces
         self.unsolvedSpaces = None # set of tuples that have unsolved spaces or k = false
 
         # load the file and initialize the in-memory board with the data
@@ -112,26 +116,96 @@ class Board():
 
     # makes a move, records it in its row, col, and box, and removes the space from unsolvedSpaces
     def makeMove(self, space, value):
+        #ok so space is a (r,c) tuple...
+        #1. save the value in board at the appropriate location:
+        self.board[space] = value
+        #2 record that the value is now in the appropriate row, column, box
+        self.valsInRows[space[0]].add(value)
+        self.valsInCols[space[1]].add(value)
+        self.valsInBoxes[self.spaceToBox(space)].add(value)
 
-        raise NotImplementedError
+        #3. remove the space fom unsolved spaces
+        self.unsolvedSpaces.remove(space)
+        
+        #raise NotImplementedError
 
     # removes the move, its record in its row, col, and box, and adds the space back to unsolvedSpaces
     def undoMove(self, space, value):
-        raise NotImplementedError
+        #1. Remove the value from board at the appropriate location
+        self.board[space].pop()
+        #2. Record that the value is no longer in the appropriate row, column, and box
+        self.valsInRows[space[0]].remove(value)
+        self.valsInCols[space[1]].remove(value)
+        self.valsInBoxes[self.spaceToBox(space)].remove(value)
+        #3. Add the space to unsolvedSpaces
+        self.unsolvedSpaces.add(space)
+        #raise NotImplementedError
 
     # returns True if the space is empty and on the board,
-    # and assigning value to it if not blocked by any constraints
+    # and assigning value to it if not blocked by any constraints (?)
     def isValidMove(self, space, value):
-        raise NotImplementedError
+        #returning false if any Sodoku rules are broken
+        # 1 - rule: every cell must contain a number between 1 and n
+        # i dont think i am implementing that here
+        # 2 - rule: there can only be one of each value in a row.
+        # 3 - rule: every column must contain only unique values.
+        # 4 - rule: Every inner n × n board delineated by bold bordering must contain only unique values.
+        # 5 - rule: You must work around the starting values in the board (see below).
+
+        #if its not in the set of unsolved spaces it's full, return false
+        if space not in self.unsolvedSpaces:
+            return False
+        
+        spacerow = space[0] #we're looking at this row
+        spacecol = space[1] #we're looking at this column
+        #checking to see if r and c are within 0 and length of board, else return false
+        if spacerow >= self.n2 or spacerow < 0:
+            return False
+        if spacecol >= self.n2 or spacecol < 0:
+            return False
+        
+        #let's iterate through the row and make sure there isn't already this value
+        for item in self.valsInRows[spacerow]:
+            if item == value:
+                return False
+        #let's iterate through the column and make sure there isn't already this value
+        for item in self.valsInCols[spacecol]:
+            if item == value:
+                return False
+        #let's iterate through the box and make sure there isn't already this value
+        for item in self.valsInBoxes[self.spaceToBox(space)]:
+            if item == value:
+                return False
+
+        #so the space is empty, is a valid row and column for this board, and satisfies constraints:
+        return True
+        
+        #raise NotImplementedError
 
     # optional helper function for use by getMostConstrainedUnsolvedSpace
     def evaluateSpace(self, space):
         raise NotImplementedError
 
+
     # gets the unsolved space with the most current constraints
     # returns None if unsolvedSpaces is empty
     def getMostConstrainedUnsolvedSpace(self):
-        raise NotImplementedError
+        # if unsolvedspaces is empty.. board is full
+        if len(self.unsolvedSpaces) == 0:
+            return None
+        #else look through unsolved spaces and return unsolved space on the board with the smallest domain of valid value assignments.
+        count = 100 #not the right to do it lol
+        for rowcol in self.unsolvedSpaces:
+            #we want the item with the lowest count
+            if self.evaluateSpace(self,rowcol) < count:
+                count = self.evaluateSpace(self,rowcol)
+                #mark that one down in result
+                result = rowcol
+        
+        # return the one with the lowest count
+        return result 
+        
+        #raise NotImplementedError
 
 class Solver:
     ##########################################
