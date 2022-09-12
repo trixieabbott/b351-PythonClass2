@@ -286,7 +286,7 @@ class Solver:
             for item in steps:
                 board.undoMove(item,steps[item])
             #ok we undid all of those moves because that didn't work. now we need to start again, only this time lets try with a different first getMostConstrarinedUnsolvedSpace - how?
-            
+
             #return self.solveBoard(board)
         
         return board
@@ -317,7 +317,7 @@ class Solver:
 
 if __name__ == "__main__":
     # change this to the input file that you'd like to test
-    board = Board('tests/test-1-easy/00.csv')
+    board = Board('tests/singletonsOnly.csv')
     # printing the board first
     print("\nBOARD BEFORE\n")
     board.print()
