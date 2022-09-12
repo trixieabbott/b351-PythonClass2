@@ -249,18 +249,21 @@ class Solver:
 
     # returns True if a solution exists and False if one does not
     def solveBoard(self, board):
-        rowcol = board.getMostConstrainedUnsolvedSpace()
+        #base case is when unsolved spaces is empty??
+        if len(board.unsolvedSpaces) == 0:
+            return board
 
-        #iterate through the range 1 to 9
-        for num in range(1,board.n2+1):
-            #check if it's valid
-            if board.isValidMove(rowcol,num):
-                #if it's valid, use assign num to rowcol using makeMove
-                board.makeMove(rowcol,num)
-        
-        #how do i make recursive call?
-        
-        return board
+        #inductive step
+        else:
+            #inductive step
+            rowcol = board.getMostConstrainedUnsolvedSpace()
+            #iterate through the range 1 to 9
+            for num in range(1,board.n2+1):
+                #check if it's valid
+                if board.isValidMove(rowcol,num):
+                    #if it's valid, use assign num to rowcol using makeMove
+                    board.makeMove(rowcol,num)
+                    return self.solveBoard(board)
 
 
 if __name__ == "__main__":
