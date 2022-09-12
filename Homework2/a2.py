@@ -116,13 +116,15 @@ class Board():
 
     # makes a move, records it in its row, col, and box, and removes the space from unsolvedSpaces
     def makeMove(self, space, value):
+        spacerow = space[0] #we're looking at this row
+        spacecol = space[1] #we're looking at this column
         #ok so space is a (r,c) tuple...
         #1. save the value in board at the appropriate location:
         self.board[space] = value
         #2 record that the value is now in the appropriate row, column, box
-        self.valsInRows[space[0]].add(value)
-        self.valsInCols[space[1]].add(value)
-        self.valsInBoxes[self.spaceToBox(space)].add(value)
+        self.valsInRows[spacerow].add(value)
+        self.valsInCols[spacecol].add(value)
+        self.valsInBoxes[self.spaceToBox(spacerow,spacecol)].add(value)
 
         #3. remove the space fom unsolved spaces
         self.unsolvedSpaces.remove(space)
@@ -173,7 +175,7 @@ class Board():
             if item == value:
                 return False
         #let's iterate through the box and make sure there isn't already this value
-        for item in self.valsInBoxes[self.spaceToBox(space)]:
+        for item in self.valsInBoxes[self.spaceToBox(spacerow,spacecol)]:
             if item == value:
                 return False
 
@@ -184,7 +186,30 @@ class Board():
 
     # optional helper function for use by getMostConstrainedUnsolvedSpace
     def evaluateSpace(self, space):
-        raise NotImplementedError
+        #strategy: number of possibilities should be n2 and then subtract from there
+        #so lets start at n2 or 9 for a 9x9 board
+        #this is the number of possibilities
+        #numberofpossibilities = self.n2
+        #this is the set of possibilites (1 to 9)
+        setofpossibilities = set(range(1,self.n2+1))
+
+        spacerow = space[0] #we're looking at this row
+        spacecol = space[1] #we're looking at this column
+        #let's iterate through the row and subtract when we see something already in the row
+        for item in self.valsInRows[spacerow]:
+            if item in setofpossibilities:
+                setofpossibilities.remove(item)
+        #let's iterate through the column and subtract from the set when we see a number already in the column
+        for item in self.valsInCols[spacecol]:
+            if item in setofpossibilities:
+                setofpossibilities.remove(item)
+        #let's iterate through the box and make sure there isn't already this value
+        for item in self.valsInBoxes[self.spaceToBox(spacerow,spacecol)]:
+            if item in setofpossibilities:
+                setofpossibilities.remove(item)
+
+        #let's count the number of items in the setofpossibilites
+        return len(setofpossibilities)
 
 
     # gets the unsolved space with the most current constraints
@@ -197,15 +222,13 @@ class Board():
         count = 100 #not the right to do it lol
         for rowcol in self.unsolvedSpaces:
             #we want the item with the lowest count
-            if self.evaluateSpace(self,rowcol) < count:
-                count = self.evaluateSpace(self,rowcol)
+            if self.evaluateSpace(rowcol) < count:
+                count = self.evaluateSpace(rowcol)
                 #mark that one down in result
                 result = rowcol
         
         # return the one with the lowest count
         return result 
-        
-        #raise NotImplementedError
 
 class Solver:
     ##########################################
@@ -226,7 +249,18 @@ class Solver:
 
     # returns True if a solution exists and False if one does not
     def solveBoard(self, board):
-        raise NotImplementedError
+        rowcol = board.getMostConstrainedUnsolvedSpace()
+
+        #iterate through the range 1 to 9
+        for num in range(1,board.n2+1):
+            #check if it's valid
+            if board.isValidMove(rowcol,num):
+                #if it's valid, use assign num to rowcol using makeMove
+                board.makeMove(rowcol,num)
+        
+        #how do i make recursive call?
+        
+        return board
 
 
 if __name__ == "__main__":
@@ -240,4 +274,8 @@ if __name__ == "__main__":
     #now we are solving the board
     s = Solver()
     s.solveBoard(board)
+
+
+    print("\n\n\n")
+    #lets print the new board
     board.print()
