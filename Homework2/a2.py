@@ -250,7 +250,6 @@ class Solver:
     # returns True if a solution exists and False if one does not
     def solveBoard(self, board):
         #base case is when unsolved spaces is empty??
-        print(len(board.unsolvedSpaces))
         if len(board.unsolvedSpaces) == 0:
             print("done")
             return board
@@ -271,11 +270,11 @@ class Solver:
 
 if __name__ == "__main__":
     # change this to the input file that you'd like to test
-    board = Board('tests/example.csv')
+    board = Board('tests/test-1-easy/00.csv')
     # printing the board first
     board.print()
-    print("\n")
-    print(board.unsolvedSpaces)
+    print("\n this is the number of unsolved spaces left:")
+    print(len(board.unsolvedSpaces))
 
 
 
@@ -287,5 +286,5 @@ if __name__ == "__main__":
     print("\n\n\n")
     #lets print the new board
     board.print()
-    print("\n")
-    print(board.unsolvedSpaces)
+    print("\n this is the number of unsolved spaces left:")
+    print(len(board.unsolvedSpaces))
