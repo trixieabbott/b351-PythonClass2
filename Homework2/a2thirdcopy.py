@@ -237,7 +237,6 @@ class Solver:
     ####   Constructor
     ##########################################
     def __init__(self):
-        self.steps = [] # keep track of all steps made
         pass
 
     ##########################################
@@ -256,7 +255,7 @@ class Solver:
         #1 - if assignment A is complete then return A
         if len(board.unsolvedSpaces) == 0:
             #check constraints, if all good then return board 
-            return board
+            return True
         
         #2 - select a variable not in unsolved spaces
             #for this we are selecting the fist element of sorted unsolved spaces
@@ -282,7 +281,7 @@ class Solver:
 
 if __name__ == "__main__":
     # change this to the input file that you'd like to test
-    board = Board('tests/test-3-hard/15.csv')
+    board = Board('tests/test-2-medium/15.csv')
     # printing the board first
     print("\nBOARD BEFORE\n")
     board.print()
