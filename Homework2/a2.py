@@ -230,7 +230,7 @@ class Board():
                 result = rowcol
         
         # return the one with the lowest count
-        print("lowest number of possibilities " + str(count))
+        #print("lowest number of possibilities " + str(count))
         return result 
 
 class Solver:
@@ -238,6 +238,8 @@ class Solver:
     ####   Constructor
     ##########################################
     def __init__(self):
+        self.steps = []
+        self.alreadyVisited = []
         pass
 
     ##########################################
@@ -251,6 +253,7 @@ class Solver:
     # state if a solution does not exist)
 
     # returns True if a solution exists and False if one does not
+ 
     def solveBoard(self, board):
         # RULES
         # 1 - rule: every cell must contain a number between 1 and n
@@ -259,37 +262,66 @@ class Solver:
         # 4 - rule: Every inner n × n board delineated by bold bordering must contain only unique values.
         # 5 - rule: You must work around the starting values in the board (see below).
 
-        #inductive step
-        #lets keep track of every step through a dictionary
-        steps = {}
+        #base case
+        #first lets check if board is already solved
+        if len(board.unsolvedSpaces) == 0:
+            #check constraints, if all good then return board TODO
+            return board
+        else:
+            pass
         
         try: #let me check if this box has any possibilites actually (if 0 then redo board)
             while board.evaluateSpace(board.getMostConstrainedUnsolvedSpace()):
                 rowcol = board.getMostConstrainedUnsolvedSpace()
+                ###
+                #let's check if we already visited this and it let to a unsolvable board
+                if rowcol in self.alreadyVisited:
+                    #we've already visited this, chose a different one
+                    count = 100
+                    for item in board.unsolvedSpaces:
+                        #we want the item with the second to lowest count
+                        if board.evaluateSpace(item) <= count:
+                            count = self.evaluateSpace(item)
+                            #mark that one down in for rowcol INSTEAD OF MOSTCONSTRAINEDUNSOLVEDSPACE
+                            rowcol = item
+                else:
+                    pass
+                ###
+                #here we are inserting a value into rowcol
                 for num in range(1,board.n2+1):
                         #check if it's valid
                         if board.isValidMove(rowcol,num):
                             #if it's valid, use assign num to rowcol using makeMove
                             board.makeMove(rowcol,num)
-                            steps[rowcol] = num
+                            self.steps.append((rowcol,num))
         
         except:
             print("heello? mostconstrarined doesnt work here bc there are 0 possibilities and trying to evaluate it")
-        
-        
-        #base case is when unsolved spaces is empty?
+
+        #let's check if board is full
         if len(board.unsolvedSpaces) == 0:
             #check constraints, if all good then return board
             return board
-        #else then we need to redo our steps
+        #else then we need to redo our last step
         else:
-            for item in steps:
-                board.undoMove(item,steps[item])
-            #ok we undid all of those moves because that didn't work. now we need to start again, only this time lets try with a different first getMostConstrarinedUnsolvedSpace - how?
+            #lets determine the last step
+            if self.steps: #if there is a list of steps, undo last move and solve board
+                laststep = self.steps[-1]
+                print(laststep)
+                self.alreadyVisited.append(laststep) #that step didn't work so append it to alreadyVisited
+                board.undoMove(laststep[0],laststep[1])
 
-            #return self.solveBoard(board)
+                return self.solveBoard(board)
+            else: #if there is no list of steps
+                print(self.steps)
+                return board
+            
+        #if it fails altogether, then undo all moves:
+
+        #for item in steps:
+            #board.undoMove(item,steps[item])
         
-        return board
+        #return board
         
 
 
@@ -317,7 +349,7 @@ class Solver:
 
 if __name__ == "__main__":
     # change this to the input file that you'd like to test
-    board = Board('tests/singletonsOnly.csv')
+    board = Board('tests/test-2-medium/15.csv')
     # printing the board first
     print("\nBOARD BEFORE\n")
     board.print()
