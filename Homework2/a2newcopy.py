@@ -1,3 +1,7 @@
+#!/usr/bin/python3
+# B351/Q351 Fall 2022
+# Do not share these assignments or their solutions outside of this class.
+
 import csv
 import itertools
 from math import fabs
@@ -24,7 +28,8 @@ class Board():
 
         # load the file and initialize the in-memory board with the data
         self.loadSudoku(filename)
-    
+
+
     # loads the sudoku board from the given file
     def loadSudoku(self, filename):
 
@@ -104,7 +109,82 @@ class Board():
                     else: row += str(val)
             print(row)
 
-    ##move functions
+
+    ##########################################
+    ####   Move Functions - YOUR IMPLEMENTATIONS GO HERE
+    ##########################################
+
+    # makes a move, records it in its row, col, and box, and removes the space from unsolvedSpaces
+    def makeMove(self, space, value):
+        spacerow = space[0] #we're looking at this row
+        spacecol = space[1] #we're looking at this column
+        #ok so space is a (r,c) tuple...
+        #1. save the value in board at the appropriate location:
+        self.board[space] = value
+        #2 record that the value is now in the appropriate row, column, box
+        self.valsInRows[spacerow].add(value)
+        self.valsInCols[spacecol].add(value)
+        self.valsInBoxes[self.spaceToBox(spacerow,spacecol)].add(value)
+
+        #3. remove the space fom unsolved spaces
+        self.unsolvedSpaces.remove(space)
+        
+        #raise NotImplementedError
+
+    # removes the move, its record in its row, col, and box, and adds the space back to unsolvedSpaces
+    def undoMove(self, space, value):
+        spacerow = space[0] #we're looking at this row
+        spacecol = space[1] #we're looking at this column
+        #1. Remove the value from board at the appropriate location
+        del self.board[space]
+        #2. Record that the value is no longer in the appropriate row, column, and box
+        self.valsInRows[space[0]].remove(value)
+        self.valsInCols[space[1]].remove(value)
+        self.valsInBoxes[self.spaceToBox(spacerow,spacecol)].remove(value)
+        #3. Add the space to unsolvedSpaces
+        self.unsolvedSpaces.add(space)
+        #raise NotImplementedError
+
+    # returns True if the space is empty and on the board,
+    # and assigning value to it if not blocked by any constraints (?)
+    def isValidMove(self, space, value):
+        #returning false if any Sodoku rules are broken
+        # RULES
+        # 1 - rule: every cell must contain a number between 1 and n
+        # 2 - rule: there can only be one of each value in a row.
+        # 3 - rule: every column must contain only unique values.
+        # 4 - rule: Every inner n × n board delineated by bold bordering must contain only unique values.
+        # 5 - rule: You must work around the starting values in the board (see below).
+
+        #if its not in the set of unsolved spaces it's full, return false
+        if space not in self.unsolvedSpaces:
+            return False
+        
+        spacerow = space[0] #we're looking at this row
+        spacecol = space[1] #we're looking at this column
+        #checking to see if r and c are within 0 and length of board, else return false
+        if spacerow >= self.n2 or spacerow < 0:
+            return False
+        if spacecol >= self.n2 or spacecol < 0:
+            return False
+        
+        #let's iterate through the row and make sure there isn't already this value
+        for item in self.valsInRows[spacerow]:
+            if item == value:
+                return False
+        #let's iterate through the column and make sure there isn't already this value
+        for item in self.valsInCols[spacecol]:
+            if item == value:
+                return False
+        #let's iterate through the box and make sure there isn't already this value
+        for item in self.valsInBoxes[self.spaceToBox(spacerow,spacecol)]:
+            if item == value:
+                return False
+
+        #so the space is empty, is a valid row and column for this board, and satisfies constraints:
+        return True
+        
+        #raise NotImplementedError
 
     # optional helper function for use by getMostConstrainedUnsolvedSpace
     def evaluateSpace(self, space):
@@ -133,7 +213,8 @@ class Board():
         #let's count the number of items in the setofpossibilites
         return len(setofpossibilities)
 
-    # gets a list of unsolved spaces sorted by most constraints to least constraints
+
+    # gets a list of unsolved spaces sorted by most constraints to least constraints NOT WHAT WAS ASKED
     # returns None if unsolvedSpaces is empty
     def getMostConstrainedUnsolvedSpace(self):
         # if unsolvedspaces is empty.. board is full
@@ -148,19 +229,96 @@ class Board():
         # return a list of tuples of unsolved space of (space, number of constraints) sorted by least to most constraints
         return sorted(listofconstraints, key=lambda x: x[1])
 
+class Solver:
+    ##########################################
+    ####   Constructor
+    ##########################################
+    def __init__(self):
+        self.steps = [] # keep track of all steps made
+        pass
+
+    ##########################################
+    ####   Solver
+    ##########################################
+
+    # recursively selects the most constrained unsolved space and attempts
+    # to assign a value to it
+
+    # upon completion, it will leave the board in the solved state (or original
+    # state if a solution does not exist)
+
+    # returns True if a solution exists and False if one does not
+ 
+    def solveBoard(self, board):
+        # RULES
+        # 1 - rule: every cell must contain a number between 1 and n
+        # 2 - rule: there can only be one of each value in a row.
+        # 3 - rule: every column must contain only unique values.
+        # 4 - rule: Every inner n × n board delineated by bold bordering must contain only unique values.
+        # 5 - rule: You must work around the starting values in the board (see below).
+
+        #base case
+        #first lets check if board is already solved
+        if len(board.unsolvedSpaces) == 0:
+            #check constraints, if all good then return board TODO
+            return board
+        
+        #idea - iterate through sorted list of unsolved, start with 1st
+        sortedlistofunsolved = board.getMostConstrainedUnsolvedSpace()
+        print(sortedlistofunsolved)
+        for item in sortedlistofunsolved: #iterating through(space, # of constraints)
+            print("looking at new item\n")
+            #lets try this space for first
+            for num in range(1,board.n2+1):
+                #check if it's valid
+                if board.isValidMove(item[0],num):
+                    #if it's valid, makeMove:
+                    board.makeMove(item[0],num)
+                    #record step:
+                    self.steps.append((item[0],num))
+                    #also recalcualte new list of sortedlistofunsolved:
+                    sortedlistofunsolved = board.getMostConstrainedUnsolvedSpace()
+                    
+                    print(sortedlistofunsolved)
+            #while loop -> this is going to keep going until 0 constraints --> no possibilities --> impossible
+        
+        if len(board.unsolvedSpaces) == 0:
+            #check constraints, if all good then return board
+            return board
+        else:
+            print("test")
+            return board
+
+        
+        #if it fails altogether, then undo all moves:
+        #for item in steps:
+            #board.undoMove(item,steps[item])
+        
+        #return board
+
 
 if __name__ == "__main__":
     # change this to the input file that you'd like to test
-    board = Board('tests/test-2-medium/15.csv')
+    board = Board('tests/test-1-easy/15.csv')
     # printing the board first
     print("\nBOARD BEFORE\n")
     board.print()
     print("\nthis is the number of unsolved spaces left:")
     print(len(board.unsolvedSpaces))
 
-    print(board.getMostConstrainedUnsolvedSpace())
-    print(board.getMostConstrainedUnsolvedSpace()[0][0])
 
+
+    #now we are solving the board
+    s = Solver()
+    s.solveBoard(board)
+
+
+    print("\n\n\n")
+    #lets print the new board
+    print("BOARD AFTER\n")
+    board.print()
+    print("\n this is the number of unsolved spaces left:")
+    print(len(board.unsolvedSpaces))
 
     #questions - my solver only works on easy, because it only goes once over
     # how do i keep track of the starting values in the board?

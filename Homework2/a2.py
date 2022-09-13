@@ -284,8 +284,6 @@ class Solver:
                             count = self.evaluateSpace(item)
                             #mark that one down in for rowcol INSTEAD OF MOSTCONSTRAINEDUNSOLVEDSPACE
                             rowcol = item
-                else:
-                    pass
                 ###
                 #here we are inserting a value into rowcol
                 for num in range(1,board.n2+1):
@@ -293,7 +291,7 @@ class Solver:
                         if board.isValidMove(rowcol,num):
                             #if it's valid, use assign num to rowcol using makeMove
                             board.makeMove(rowcol,num)
-                            self.steps.append((rowcol,num))
+                            self.steps.append((rowcol,num)) #add (space, value) to steps
         
         except:
             print("heello? mostconstrarined doesnt work here bc there are 0 possibilities and trying to evaluate it")
@@ -302,18 +300,17 @@ class Solver:
         if len(board.unsolvedSpaces) == 0:
             #check constraints, if all good then return board
             return board
-        #else then we need to redo our last step
+        #else then we need to mark out last step and redo it without doing that one
         else:
             #lets determine the last step
             if self.steps: #if there is a list of steps, undo last move and solve board
                 laststep = self.steps[-1]
-                print(laststep)
                 self.alreadyVisited.append(laststep) #that step didn't work so append it to alreadyVisited
+                #print(board.board)
                 board.undoMove(laststep[0],laststep[1])
-
                 return self.solveBoard(board)
             else: #if there is no list of steps
-                print(self.steps)
+                #print(self.steps)
                 return board
             
         #if it fails altogether, then undo all moves:
@@ -349,7 +346,7 @@ class Solver:
 
 if __name__ == "__main__":
     # change this to the input file that you'd like to test
-    board = Board('tests/test-2-medium/15.csv')
+    board = Board('tests/test-3-ridiculous/15.csv')
     # printing the board first
     print("\nBOARD BEFORE\n")
     board.print()
