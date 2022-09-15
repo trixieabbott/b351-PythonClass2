@@ -4,7 +4,6 @@
 
 import csv
 import itertools
-from math import fabs
 
 class Board():
 
@@ -254,9 +253,33 @@ class Solver:
     def solveBoard(self, board):
         #1 - if assignment A is complete then return A
         if len(board.unsolvedSpaces) == 0:
-            #check constraints, if all good then return board 
+            # RULES
             return True
-        
+            # 5 - rule: You must work around the starting values in the board (see below).
+                #check constraints, if all good then return board 
+            """""
+            # 1 - rule: every cell must contain a number between 1 and n
+            listofrows = range(1,board.n2+1)
+            for row in listofrows:
+                for value in board.valsInRows[row]:
+                    if value < 1 or value > board.n2:
+                        return False
+
+            # 2 - rule: there can only be one of each value in a row.
+            for row in listofrows:
+                if len(board.valsinRow[row]) == len(set(board.valsinRow[row])):
+                    return False
+            
+            # 3 - rule: every column must contain only unique values.
+            listofcols = range(1,board.n2+1)
+            for col in listofcols:
+                if len(board.valsinCols[col]) == len(set(board.valsinCols[col])):
+                    return False
+            """
+            # 4 - rule: Every inner n × n board delineated by bold bordering must contain only unique values.
+            ###
+
+            
         #2 - select a variable not in unsolved spaces
             #for this we are selecting the fist element of sorted unsolved spaces
         space = board.getMostConstrainedUnsolvedSpace()
@@ -281,7 +304,7 @@ class Solver:
 
 if __name__ == "__main__":
     # change this to the input file that you'd like to test
-    board = Board('tests/test-2-medium/15.csv')
+    board = Board('tests/test-4-tough/00.csv')
     # printing the board first
     print("\nBOARD BEFORE\n")
     board.print()
@@ -301,6 +324,3 @@ if __name__ == "__main__":
     board.print()
     print("\n this is the number of unsolved spaces left:")
     print(len(board.unsolvedSpaces))
-
-    #questions - my solver only works on easy, because it only goes once over
-    # how do i keep track of the starting values in the board?
