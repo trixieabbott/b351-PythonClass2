@@ -4,7 +4,6 @@
 
 import csv
 import itertools
-import os
 
 class Board():
 
@@ -146,7 +145,7 @@ class Board():
         #raise NotImplementedError
 
     # returns True if the space is empty and on the board,
-    # and assigning value to it if not blocked by any constraints (?)
+    # and assigning value to it if not blocked by any constraints
     def isValidMove(self, space, value):
         #returning false if any Sodoku rules are broken
         # RULES
@@ -254,7 +253,28 @@ class Solver:
     def solveBoard(self, board):
         #1 - if assignment A is complete then return A
         if len(board.unsolvedSpaces) == 0:
+            #checking constraints... in case i get a full board where constraints are not satisfied.
+            # 1 - rule: every cell must contain a number between 1 and n
+            listofrows = range(1,board.n2)
+            for row in listofrows:
+                for value in board.valsInRows[row]:
+                    if value < 1 or value > board.n2:
+                        return False
+            # 2 - rule: there can only be one of each value in a row
+            for row in listofrows:
+                if len(board.valsInRows[row]) != len(set(board.valsInRows[row])):
+                    return False
+            # 3 - rule: every column must contain only unique values.
+            listofcols = range(1,board.n2)
+            for col in listofcols:
+                if len(board.valsInCols[col]) != len(set(board.valsInCols[col])):
+                    return False
+            # 4 - rule: Every inner n × n board delineated by bold bordering must contain only unique values.
+            ### going to hope there is no inputted full board where this is not already satisfied
+
+            #otherwise return true 
             return True
+            
 
         #2 - select a variable not in unsolved spaces
             #for this we are selecting the fist element of sorted unsolved spaces
@@ -282,17 +302,13 @@ if __name__ == "__main__":
     # change this to the input file that you'd like to test
     board = Board('tests/test-3-hard/00.csv')
     # printing the board first
-    print("\nBOARD BEFORE\n")
+    print("\nBOARD BEFORE:\n")
     board.print()
-    print("\nthis is the number of unsolved spaces left:")
-    print(len(board.unsolvedSpaces))
 
     #now we are solving the board
     s = Solver()
     s.solveBoard(board)
 
     #lets print the new board
-    print("BOARD AFTER\n")
+    print("\nBOARD AFTER:\n")
     board.print()
-    print("\n this is the number of unsolved spaces left:")
-    print(len(board.unsolvedSpaces))
