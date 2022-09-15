@@ -4,7 +4,7 @@
 
 import csv
 import itertools
-from math import fabs
+import os
 
 class Board():
 
@@ -213,7 +213,6 @@ class Board():
         #let's count the number of items in the setofpossibilites
         return len(setofpossibilities)
 
-
     # gets the unsolved space with the most current constraints
     # returns None if unsolvedSpaces is empty
     def getMostConstrainedUnsolvedSpace(self):
@@ -238,8 +237,6 @@ class Solver:
     ####   Constructor
     ##########################################
     def __init__(self):
-        self.steps = []
-        self.alreadyVisited = []
         pass
 
     ##########################################
@@ -255,117 +252,47 @@ class Solver:
     # returns True if a solution exists and False if one does not
  
     def solveBoard(self, board):
-        # RULES
-        # 1 - rule: every cell must contain a number between 1 and n
-        # 2 - rule: there can only be one of each value in a row.
-        # 3 - rule: every column must contain only unique values.
-        # 4 - rule: Every inner n × n board delineated by bold bordering must contain only unique values.
-        # 5 - rule: You must work around the starting values in the board (see below).
-
-        #base case
-        #first lets check if board is already solved
+        #1 - if assignment A is complete then return A
         if len(board.unsolvedSpaces) == 0:
-            #check constraints, if all good then return board TODO
-            return board
-        else:
-            pass
+            return True
+
+        #2 - select a variable not in unsolved spaces
+            #for this we are selecting the fist element of sorted unsolved spaces
+        space = board.getMostConstrainedUnsolvedSpace()
+
+        #3 - select an ordering on the domain of X
+            #for this we are selecting {1,2,3...n}
         
-        try: #let me check if this box has any possibilites actually (if 0 then redo board)
-            while board.evaluateSpace(board.getMostConstrainedUnsolvedSpace()):
-                rowcol = board.getMostConstrainedUnsolvedSpace()
-                ###
-                #let's check if we already visited this and it let to a unsolvable board
-                if rowcol in self.alreadyVisited:
-                    #we've already visited this, chose a different one
-                    count = 100
-                    for item in board.unsolvedSpaces:
-                        #we want the item with the second to lowest count
-                        if board.evaluateSpace(item) <= count:
-                            count = self.evaluateSpace(item)
-                            #mark that one down in for rowcol INSTEAD OF MOSTCONSTRAINEDUNSOLVEDSPACE
-                            rowcol = item
-                ###
-                #here we are inserting a value into rowcol
-                for num in range(1,board.n2+1):
-                        #check if it's valid
-                        if board.isValidMove(rowcol,num):
-                            #if it's valid, use assign num to rowcol using makeMove
-                            board.makeMove(rowcol,num)
-                            self.steps.append((rowcol,num)) #add (space, value) to steps
+        #4 - for each value v in D Do:
+        for num in range(1,board.n2+1):
+            #check if it's valid
+            if board.isValidMove(space,num):
+                board.makeMove(space,num)       #1
+                result = self.solveBoard(board) #2
+                if result:
+                    return result
+                board.undoMove(space,num)
         
-        except:
-            print("heello? mostconstrarined doesnt work here bc there are 0 possibilities and trying to evaluate it")
-
-        #let's check if board is full
-        if len(board.unsolvedSpaces) == 0:
-            #check constraints, if all good then return board
-            return board
-        #else then we need to mark out last step and redo it without doing that one
-        else:
-            #lets determine the last step
-            if self.steps: #if there is a list of steps, undo last move and solve board
-                laststep = self.steps[-1]
-                self.alreadyVisited.append(laststep) #that step didn't work so append it to alreadyVisited
-                #print(board.board)
-                board.undoMove(laststep[0],laststep[1])
-                return self.solveBoard(board)
-            else: #if there is no list of steps
-                #print(self.steps)
-                return board
-            
-        #if it fails altogether, then undo all moves:
-
-        #for item in steps:
-            #board.undoMove(item,steps[item])
+        #5 - return failure
+        return False
         
-        #return board
-        
-
-
-
-        """"" 
-        else:
-            rowcol = board.getMostConstrainedUnsolvedSpace()
-            #let me check if this box has any possibilites actually
-            if board.evaluateSpace(rowcol)==0:
-                #let's undo all the moves
-                print("there is 0 possibilities, so let's undo those other moves")
-                board.undoMove(rowcol,)
-                #don't know how
-            else:
-                #inductive step
-                #iterate through the range 1 to 9
-                for num in range(1,board.n2+1):
-                    #check if it's valid
-                    if board.isValidMove(rowcol,num):
-                        #if it's valid, use assign num to rowcol using makeMove
-                        board.makeMove(rowcol,num)
-                        return self.solveBoard(board)
-        """
 
 
 if __name__ == "__main__":
     # change this to the input file that you'd like to test
-    board = Board('tests/test-3-ridiculous/15.csv')
+    board = Board('tests/test-3-hard/00.csv')
     # printing the board first
     print("\nBOARD BEFORE\n")
     board.print()
     print("\nthis is the number of unsolved spaces left:")
     print(len(board.unsolvedSpaces))
 
-
-
     #now we are solving the board
     s = Solver()
     s.solveBoard(board)
 
-
-    print("\n\n\n")
     #lets print the new board
     print("BOARD AFTER\n")
     board.print()
     print("\n this is the number of unsolved spaces left:")
     print(len(board.unsolvedSpaces))
-
-    #questions - my solver only works on easy, because it only goes once over
-    # how do i keep track of the starting values in the board?
