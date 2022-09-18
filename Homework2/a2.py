@@ -300,7 +300,7 @@ class Solver:
 
 if __name__ == "__main__":
     # change this to the input file that you'd like to test
-    board = Board('tests/test-3-hard/00.csv')
+    board = Board('Homework2/tests/test-3-hard/00.csv')
     # printing the board first
     print("\nBOARD BEFORE:\n")
     board.print()
