@@ -29,7 +29,7 @@ CONTINUE = 0
 # (2) board_object.slide_blank is error-safe. It will return None if it is impossible to slide the blank
 
 def expand_fringe(current_state, fringe):
-    
+    fringe += [current_state.?] #how to generate children?
     raise NotImplementedError
 
 
@@ -195,6 +195,7 @@ def ids(start_board, goal_board, final_depth):
 
 
 def main():
+    ### try for 8 puzzle first
     # 8-Puzzle Tests!
     goal_board = Board.Board([[1, 2, 3],
                               [4, 5, 6],
@@ -204,9 +205,13 @@ def main():
                               [4, 5, 3],
                               [7, 8, 6]])
 
+    print("This is the board we have\n")
+    print(simple_board)
+
     # Simple test case for expand_fringe
     fringe1 = []
     node1 = State.State(simple_board, None, 0, 0)
+    print(node1)
     expand_fringe(node1, fringe1)
     assert State.State(simple_board.slide_blank((-1, 0)), node1, 0, 0) not in fringe1
     assert State.State(simple_board.slide_blank((0, -1)), node1, 0, 1) in fringe1
@@ -250,6 +255,9 @@ def main():
     assert ids(node1.board, goal_board, 1) is None
     result = ids(node1.board, goal_board, 2)
     assert type(result) is Board.Board
+
+
+    ####
 
     # 15-Puzzle Tests
 
