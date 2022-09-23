@@ -14,7 +14,7 @@ class Board:
 
     # The 15-puzzle board representation
     def __init__(self, matrix):
-        self.matrix = matrix
+        self.matrix = matrix # double subscripted list containing th3e current puzzle state
         for r, row in enumerate(matrix):
             if 0 in row:
                 self.blankPos = (r, row.index(0))

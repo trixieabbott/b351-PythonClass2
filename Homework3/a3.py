@@ -11,7 +11,6 @@
 
 import State
 import Board
-import heapq
 
 STOP = -1
 CONTINUE = 0
@@ -30,6 +29,7 @@ CONTINUE = 0
 # (2) board_object.slide_blank is error-safe. It will return None if it is impossible to slide the blank
 
 def expand_fringe(current_state, fringe):
+    
     raise NotImplementedError
 
 
