@@ -9,8 +9,11 @@
 #                                 #
 ###################################
 
+from curses import curs_set
+from typing import final
 import State
 import Board
+import heapq
 
 STOP = -1
 CONTINUE = 0
@@ -29,8 +32,20 @@ CONTINUE = 0
 # (2) board_object.slide_blank is error-safe. It will return None if it is impossible to slide the blank
 
 def expand_fringe(current_state, fringe):
-    fringe += [current_state.?] #how to generate children?
-    raise NotImplementedError
+    #so current state is a state made up of simple_board, no parent state, 0 depth, 0 fvalue
+    #let's grab the board
+    theboard = current_state.board
+
+    #here are the moves we want to iterate through
+    moveOne = (0,1)
+    moveTwo = (0,-1)
+    moveThree = (-1,0)
+    moveFour = (1,0)
+    list = [moveOne,moveTwo,moveThree,moveFour]
+    #seeing if these moves will work on theboard
+    for move in list:
+        if theboard.slide_blank(move):
+            fringe.append(State.State(theboard.slide_blank(move), current_state, 0, current_state.depth+1))
 
 
 ########################################
@@ -43,7 +58,26 @@ def expand_fringe(current_state, fringe):
 #     See the project documentation for more details.
 
 def breadth_first_search(fringe, max_depth, goal_board):
-    raise NotImplementedError
+    #fringe is made up of a list of states(board,parent state,depth,fvalue)
+
+    #stops when the fringe is emtpy
+    if fringe == []:
+        return STOP
+    else:
+        #pops the first state in the fringe
+        currstate = fringe.pop(0)
+        #checks if goal board
+        if (currstate.board == goal_board):
+            return currstate
+        #ignores states deepr than max depth
+        elif (currstate.depth > max_depth):
+            return CONTINUE
+        #expands the fringe
+        else:
+            expand_fringe(currstate,fringe)
+            return CONTINUE
+        
+
 
 
 def uninformed_solver(start_board, max_depth, goal_board):
@@ -72,7 +106,7 @@ def uninformed_solver(start_board, max_depth, goal_board):
 #     (priority) that board should have in a uniform-cost search scenario.
 
 def ucs_f_function(board, current_depth):
-    raise NotImplementedError
+    return current_depth
 
 
 ###########################################
@@ -86,7 +120,11 @@ def ucs_f_function(board, current_depth):
 # (1) It may be helpful to consult your solution for a1.compose here.
 
 def a_star_f_function_factory(heuristic, goal_board):
-    raise NotImplementedError
+    #heuristic is a function
+    #returns a function where you pass the current board 
+    #composed function = lambda x: f_outer(f_inner(x))
+    myFunction = lambda x: heuristic(x)
+    return myFunction
 
 
 # Here is an example heuristic function.
@@ -118,7 +156,14 @@ def manhattan_distance(current_board, goal_board):
 
 
 def my_heuristic(current_board, goal_board):
-    raise NotImplementedError
+    sum = 0
+
+    for i in range(0,3):
+        for j in range(0,3):
+            if current_board.matrix[i][j] != goal_board.matrix[i][j]:
+                sum += 1
+    
+    return sum - 1
 
 #################################
 # Problem 6 - Informed Expansion
@@ -132,6 +177,10 @@ def my_heuristic(current_board, goal_board):
 
 
 def informed_expansion(current_state, fringe, f_function):
+    heapq.heapify(fringe)
+    
+    print(fringe)
+
     raise NotImplementedError
 
 
@@ -146,7 +195,28 @@ def informed_expansion(current_state, fringe, f_function):
 
 
 def informed_search(fringe, goal_board, f_function, explored):
-    raise NotImplementedError
+    #step 1
+    if fringe == []:
+        return STOP
+
+    #step 2
+    currstate = fringe[0]
+    theFunction = a_star_f_function_factory(f_function,goal_board)
+
+    #step 3:
+    if (currstate in explored and theFunction(currstate)>=explored[currstate]):#is not smaller than previous f value):
+        return CONTINUE
+
+    #step 4
+    explored[currstate.board].append(theFunction(currstate))
+
+    #step 5
+    if (currstate.board == goal_board):
+        return currstate
+    #step 6
+    else:
+        expand_fringe(currstate,fringe)
+        return CONTINUE
 
 
 def informed_solver(start_board, goal_board, f_function):
@@ -188,7 +258,42 @@ def a_star_solver(start_board, goal_board, heuristic):
 
 
 def ids(start_board, goal_board, final_depth):
-    raise NotImplementedError
+
+
+    ##THIS IS A SINGLE ITERATION OF IDS
+    def ids_singleIteration(fringe,final_depth,goal_board,horizon):
+        if not fringe:
+            return True
+        currstate = fringe.pop()
+        if currstate.board.__eq__(goal_board):
+            return True
+        if final_depth < 0:
+            return None
+        while len(fringe)>0:
+            if currstate.depth >= horizon:
+                continue
+            else:
+                moveOne = (0,1)
+                moveTwo = (0,-1)
+                moveThree = (-1,0)
+                moveFour = (1,0)
+                list = [moveOne,moveTwo,moveThree,moveFour]
+                #seeing if these moves will work on theboard
+                for move in list:
+                    if currstate.slide_blank(move) is not None:
+                        fringe.insert(0,State.State(currstate.slide_blank(move), currstate, 0, currstate.depth+1))
+
+
+    #   THIS IS A SOLVER FOR IDS USING singleIteration
+    found = False
+    fringe = [State.State(start_board,None,0,0)]
+    horizon = 0
+    while not found and final_depth > 0:
+        final_depth -= 1
+        found = ids_singleIteration(fringe,final_depth,goal_board,horizon)
+    if type(found) is State.State:
+        return found
+    return None
 ###########################
 # Main method for testing #
 ###########################
@@ -205,24 +310,28 @@ def main():
                               [4, 5, 3],
                               [7, 8, 6]])
 
-    print("This is the board we have\n")
+    print("This is the board we have:\n")
     print(simple_board)
 
     # Simple test case for expand_fringe
     fringe1 = []
     node1 = State.State(simple_board, None, 0, 0)
-    print(node1)
+    #so current state is a state made up of simple_board, no parent state, 0 depth, 0 fvalue
     expand_fringe(node1, fringe1)
     assert State.State(simple_board.slide_blank((-1, 0)), node1, 0, 0) not in fringe1
     assert State.State(simple_board.slide_blank((0, -1)), node1, 0, 1) in fringe1
+    print("i think expand fringe is working?")
 
     # Simple test case for breadth_first_search
     fringe1 = []
     node1 = State.State(simple_board, None, 0, 0)
     expand_fringe(node1, fringe1)
     assert breadth_first_search(fringe1, 3, goal_board) == CONTINUE
-    fringe1[0] = State.State(goal_board, node1, 0, 0)
+    fringe1[0] = State.State(goal_board, node1, 0, 0) #what is happening here?
     assert type(breadth_first_search(fringe1, 3, goal_board)) is State.State
+    print("this is the board we have after bfs")
+    print(simple_board)
+    print("i think BFS is working?")
 
     # Simple test case for ucs_f_function
     node1 = State.State(simple_board, None, 0, 0)
