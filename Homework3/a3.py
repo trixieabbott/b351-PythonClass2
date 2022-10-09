@@ -123,8 +123,8 @@ def a_star_f_function_factory(heuristic, goal_board):
     #heuristic is a function
     #returns a function where you pass the current board 
     #composed function = lambda x: f_outer(f_inner(x))
-    myFunction = lambda x: heuristic(x)
-    return myFunction
+    theFunctiion = lambda board, current_depth: current_depth + heuristic(board, goal_board)
+    return theFunctiion
 
 
 # Here is an example heuristic function.
@@ -179,9 +179,18 @@ def my_heuristic(current_board, goal_board):
 def informed_expansion(current_state, fringe, f_function):
     heapq.heapify(fringe)
     
-    print(fringe)
-
-    raise NotImplementedError
+    theboard = current_state.board
+    
+    #here are the moves we want to iterate through
+    moveOne = (0,1)
+    moveTwo = (0,-1)
+    moveThree = (-1,0)
+    moveFour = (1,0)
+    list = [moveOne,moveTwo,moveThree,moveFour]
+    #seeing if these moves will work on theboard
+    for move in list:
+        if theboard.slide_blank(move):
+            heapq.heappush(fringe,State.State(theboard.slide_blank(move), current_state, 0, f_function))
 
 
 #################################
@@ -198,24 +207,25 @@ def informed_search(fringe, goal_board, f_function, explored):
     #step 1
     if fringe == []:
         return STOP
-
-    #step 2
-    currstate = fringe[0]
-    theFunction = a_star_f_function_factory(f_function,goal_board)
-
-    #step 3:
-    if (currstate in explored and theFunction(currstate)>=explored[currstate]):#is not smaller than previous f value):
-        return CONTINUE
-
-    #step 4
-    explored[currstate.board].append(theFunction(currstate))
-
-    #step 5
-    if (currstate.board == goal_board):
-        return currstate
-    #step 6
     else:
-        expand_fringe(currstate,fringe)
+        #step 2 uses heapop ot get the highest priority state from the fringe
+        currstate = heapq.heappop(fringe)
+        #step 5 returns goal sttate when found
+        if (currstate.board == goal_board):
+            return currstate
+
+        #not sure how to use this
+        theFunction = a_star_f_function_factory(f_function,goal_board)
+
+        #step 3:
+        if (theFunction(currstate)>=explored[currstate]):#is not smaller than previous f value):
+            return CONTINUE
+
+        #step 4
+        explored[currstate.board].append(theFunction(currstate))
+        #step 6
+        
+        informed_expansion(currstate,fringe,theFunction)
         return CONTINUE
 
 
@@ -262,27 +272,19 @@ def ids(start_board, goal_board, final_depth):
 
     ##THIS IS A SINGLE ITERATION OF IDS
     def ids_singleIteration(fringe,final_depth,goal_board,horizon):
-        if not fringe:
-            return True
+        if fringe== []:
+            return STOP
         currstate = fringe.pop()
-        if currstate.board.__eq__(goal_board):
-            return True
+        if currstate.board == goal_board:
+            return currstate.board
         if final_depth < 0:
             return None
         while len(fringe)>0:
             if currstate.depth >= horizon:
-                continue
+                return CONTINUE
             else:
-                moveOne = (0,1)
-                moveTwo = (0,-1)
-                moveThree = (-1,0)
-                moveFour = (1,0)
-                list = [moveOne,moveTwo,moveThree,moveFour]
-                #seeing if these moves will work on theboard
-                for move in list:
-                    if currstate.slide_blank(move) is not None:
-                        fringe.insert(0,State.State(currstate.slide_blank(move), currstate, 0, currstate.depth+1))
-
+                expand_fringe(currstate,fringe)
+                return CONTINUE
 
     #   THIS IS A SOLVER FOR IDS USING singleIteration
     found = False
@@ -344,25 +346,26 @@ def main():
     # This section is for you to create tests for your own heuristic
 
     # Simple test for Informed Expansion
-    node1 = State.State(simple_board, None, 0, 0)
-    fringe1 = []
-    informed_expansion(node1, fringe1, ucs_f_function)
-    assert State.State(simple_board.slide_blank((-1, 0)), node1, 0, 0) not in fringe1
-    assert State.State(simple_board.slide_blank((0, -1)), node1, 0, 1) in fringe1
+    # node1 = State.State(simple_board, None, 0, 0)
+    # fringe1 = []
+    # informed_expansion(node1, fringe1, ucs_f_function)
+    #assert State.State(simple_board.slide_blank((-1, 0)), node1, 0, 0) not in fringe1
+    #assert State.State(simple_board.slide_blank((0, -1)), node1, 0, 1) in fringe1
 
     # Simple test for Informed Search
-    fringe1 = []
-    explored = {}
-    node1 = State.State(simple_board, None, 0, 0)
-    expand_fringe(node1, fringe1)
-    assert informed_search(fringe1, goal_board, ucs_f_function, explored) == CONTINUE
-    fringe1[0] = State.State(goal_board, node1, 0, 0)
-    assert type(informed_search(fringe1, goal_board, ucs_f_function, explored)) is State.State
+    # fringe1 = []
+    # explored = {}
+    # node1 = State.State(simple_board, None, 0, 0)
+    # expand_fringe(node1, fringe1)
+    # assert informed_search(fringe1, goal_board, ucs_f_function, explored) == CONTINUE
+    # fringe1[0] = State.State(goal_board, node1, 0, 0)
+    # assert type(informed_search(fringe1, goal_board, ucs_f_function, explored)) is State.State
 
     # Simple test for IDS
     node1 = State.State(simple_board, None, 0, 0)
     assert ids(node1.board, goal_board, 1) is None
     result = ids(node1.board, goal_board, 2)
+    print(result)
     assert type(result) is Board.Board
 
 
