@@ -21,8 +21,8 @@ class BasePlayer:
     # P2_WIN_SCORE < TIE_SCORE < P1_WIN_SCORE
     # Access these with "self.TIE_SCORE", etc.
     P1_WIN_SCORE = 2000
-    P2_WIN_SCORE = 0
-    TIE_SCORE =  -2000
+    P2_WIN_SCORE = -2000
+    TIE_SCORE =  0
 
     # Returns a heuristic for the board position
     # Good positions for player 1 pieces should be positive and
