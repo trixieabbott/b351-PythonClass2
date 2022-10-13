@@ -72,6 +72,8 @@ class Board:
         self.board_history.append(self.board[:])
 
         player = self.turn
+        #print(player)
+        #print(player)
         pit = player*7 + move
 
         # remove stones from corresponding pit

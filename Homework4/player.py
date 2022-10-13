@@ -8,6 +8,7 @@
 
 import math
 from board import Board
+import random
 
 class BasePlayer:
     def __init__(self, max_depth):
@@ -19,15 +20,60 @@ class BasePlayer:
     # Assign integer scores to the three terminal states
     # P2_WIN_SCORE < TIE_SCORE < P1_WIN_SCORE
     # Access these with "self.TIE_SCORE", etc.
-    P1_WIN_SCORE = NotImplemented
-    P2_WIN_SCORE = NotImplemented
-    TIE_SCORE =  NotImplemented
+    P1_WIN_SCORE = 2000
+    P2_WIN_SCORE = 0
+    TIE_SCORE =  -2000
 
     # Returns a heuristic for the board position
-    # Good positions for 0 pieces should be positive and
-    # good positions for 1 pieces should be negative
+    # Good positions for player 1 pieces should be positive and
+    # good positions for player 2 pieces should be negative
     # for all boards, P2_WIN_SCORE < heuristic(b) < P1_WIN_SCORE
+    #CAN BE NEGATIVE, IF IT'S POSITIVE, I AM CLOSER TO WINNING
+    #Understand tic tac toe heuristic
+    
     def heuristic(self, board):
+        score = (board.p1_pot - board.p2_pot) * 15
+        ## game over :( or :) maybe?
+        if board.p1_pot > 25 or board.p2_pot > 25:
+            return 1999 if board.p1_pot > 25 else -1999
+        ## hoarder
+        score += sum([(3-i)*board.p1_pits[i-1] for i in range(3)])
+        score += sum(board.p1_pits)
+        score -= sum([(3-i)*board.p2_pits[i-1] for i in range(3)])
+        score -= sum(board.p2_pits)
+        for i in range(6):
+            ## captures
+            pit = i if not board.turn else i + 7
+            stones = board.board[pit]
+            while stones > 0:
+                if (pit == 5 and board.turn) or (pit == 12 and not board.turn):
+                    pit += 2
+                else: pit += 1
+                pit %= 14
+                stones -= 1
+            new_side = pit // 7
+            if board.turn == new_side and not board.board[pit] and board.board[12-pit]:
+                score += (board.board[12-pit] + 1) * (1 - board.turn*2)
+        return score
+        #IDEAS
+        #if its player 1's turn -->  add 10
+
+        #if its player 2's turn --> subtract 10
+        
+
+        #if player 1 has mores stones -> add 5 to them?
+
+        #if player 2 has more stones --> subtract 5?
+
+        #if player 1 has 1 stone in 6th pit, 2 stones in 5th pit, etc. --> add 5
+
+        #if player 2 has 1 stone in 6th pit, 2 stones in 5th pit, etc. --> subtract 5
+
+
+        #if player 1 has empty spots, and theres stones across the way,  add 5
+
+        # if player 2 has empty spots, and theres stones accross the way, add 5
+        #TODO
         raise NotImplementedError
 
     def findMove(self, trace):
@@ -89,6 +135,34 @@ class PlayerMM(BasePlayer):
     # performs minimax on board with depth.
     # returns the best move and best score as a tuple
     def minimax(self, board, depth):
+        #TODO
+        terminal = board.game_over
+        if(terminal == 0): #if game over is false
+            return(None, self.P1_WIN_SCORE)
+        elif(terminal == 1): #if game over is true, 
+            return(None, self.P2_WIN_SCORE)
+        elif(terminal == -1):
+            return(None, self.TIE_SCORE)
+        elif(terminal == None and depth == 0): #if game_over is not true or false
+            return(None, self.heuristic(board))
+
+        
+        
+        else:
+            A = list(board.getAllValidMoves())
+            C = []
+            for move in A:
+                C.append(self.minimax(board.makeMove(move), depth - 1)[1])
+            
+            if(len(C) != 0): #if there's NO moves left in getAllValidMoves
+                if(board.turn == 0): #so it's player 1's turn - return their MAX
+                    return (A[C.index(max(C))], max(C))
+                else: #then its player 2's turn - then return their MIN
+                    return (A[C.index(min(C))], min(C))
+            else: #if there IS moves in getAllValidMoves, then return heuristic
+                return(None, self.heuristic(board))
+
+
         raise NotImplementedError
 
     def findMove(self, trace):

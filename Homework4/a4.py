@@ -6,6 +6,7 @@
 ### and do not share your solutions outside of this class.
 ### Doing so constitutes academic misconduct and copyright infringement.
 
+from random import Random
 import sys
 
 from board import Board
@@ -54,10 +55,11 @@ if __name__ == "__main__":
     # Create player one by calling the
     # player class corresponding to the
     # search algorithm the player uses.
-    p1 = RemotePlayer(3)
+    #change to random
+    p1 = RandomPlayer(3)
 
     # Same for player 2
-    p2 = ManualPlayer()
+    p2 = PlayerMM(3)
 
     # Create the game instance using the
     # board and players you've made.
