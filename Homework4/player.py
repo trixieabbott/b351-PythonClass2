@@ -32,18 +32,27 @@ class BasePlayer:
     #Understand tic tac toe heuristic
     
     def heuristic(self, board):
+        #first, score will be difference in each players pot *15
         score = (board.p1_pot - board.p2_pot) * 15
-        ## game over :( or :) maybe?
+
+        # if either pot already has over 25, they will automatically win
         if board.p1_pot > 25 or board.p2_pot > 25:
             return 1999 if board.p1_pot > 25 else -1999
-        ## hoarder
+
+        #add to score all the stones in pits[0] *2 ,pits[1]*1
+        ## add to score all the stones in player 1's pits
         score += sum([(3-i)*board.p1_pits[i-1] for i in range(3)])
         score += sum(board.p1_pits)
+
+        # subtract all the stones in player 2's pits
         score -= sum([(3-i)*board.p2_pits[i-1] for i in range(3)])
         score -= sum(board.p2_pits)
+
+
         for i in range(6):
-            ## captures
+            #one way to go about adding numbers to pit then adding pit to score
             pit = i if not board.turn else i + 7
+
             stones = board.board[pit]
             while stones > 0:
                 if (pit == 5 and board.turn) or (pit == 12 and not board.turn):
@@ -258,13 +267,13 @@ class TestPlayer(BasePlayer):
     # Assign integer scores to the three terminal states
     # P2_WIN_SCORE < TIE_SCORE < P1_WIN_SCORE
     # Access these with "self.TIE_SCORE", etc.
-    P1_WIN_SCORE = 50
-    P2_WIN_SCORE = -50
-    TIE_SCORE =  0
+    # P1_WIN_SCORE = 50
+    # P2_WIN_SCORE = -50
+    # TIE_SCORE =  0
     def heuristic(self):
         #IDEAS
         #if its player 1's turn -->  add 10
-        
+
         #if its player 2's turn --> subtract 10
         
 
@@ -281,30 +290,3 @@ class TestPlayer(BasePlayer):
 
         # if player 2 has empty spots, and theres stones accross the way, add 5
         pass
-
-        # score = (board.p1_pot - board.p2_pot) * 15
-        # ## game over :( or :) maybe?
-        # if board.p1_pot > 25 or board.p2_pot > 25:
-        #     return 1999 if board.p1_pot > 25 else -1999
-        # ## hoarder
-        # score += sum([(3-i)*board.p1_pits[i-1] for i in range(3)])
-        # score += sum(board.p1_pits)
-        # score -= sum([(3-i)*board.p2_pits[i-1] for i in range(3)])
-        # score -= sum(board.p2_pits)
-        # for i in range(6):
-        #     ## captures
-        #     pit = i if not board.turn else i + 7
-        #     stones = board.board[pit]
-        #     while stones > 0:
-        #         if (pit == 5 and board.turn) or (pit == 12 and not board.turn):
-        #             pit += 2
-        #         else: pit += 1
-        #         pit %= 14
-        #         stones -= 1
-        #     new_side = pit // 7
-        #     if board.turn == new_side and not board.board[pit] and board.board[12-pit]:
-        #         score += (board.board[12-pit] + 1) * (1 - board.turn*2)
-        # return score
-
-
-
