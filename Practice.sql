@@ -1,4 +1,7 @@
-
+DROP TABLE Customer_T;
+DROP TABLE Order_T;
+DROP TABLE Product_T;
+DROP TABLE OrderLine_T;
 
 CREATE TABLE Customer_T
     (CustomerID                     NUMBER(11,0)        NOT NULL,
@@ -6,7 +9,7 @@ CREATE TABLE Customer_T
     CustomerAddress                 VARCHAR2(30),
     CustomerCity                    VARCHAR2(20),
     CustomerState                   CHAR(2),
-    CustomerPostalCode              VARCHAR2(9)
+    CustomerPostalCode              VARCHAR2(9),
 CONSTRAINT Customer_PK PRIMARY KEY (CustomerID));
 
 CREATE TABLE Order_T
