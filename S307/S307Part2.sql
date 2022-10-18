@@ -50,11 +50,11 @@ CONSTRAINT StudentID1_FK FOREIGN KEY (StudentID) REFERENCES Student_T(StudentID)
 
 --4. Write SQL data definition commands for each of the following
 --a. how would you add an attribute, Class, to the Student table?
-
+ALTER TABLE Student_T ADD COLUMN Class VARCHAR2(20);
 
 --b. how would you remove the registration table?
-
+DROP TABLE Registration_T;
 
 
 --c. how would you change the FacultyName field from 25 to 40 characters?
-
+ALTER TABLE Faculty_T ALTER COLUMN FacultyName VARCHAR2(40);
