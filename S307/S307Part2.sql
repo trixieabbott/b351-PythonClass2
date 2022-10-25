@@ -43,13 +43,14 @@ CONSTRAINT StudentID1_FK FOREIGN KEY (StudentID) REFERENCES Student_T(StudentID)
 --2. Use SQL to define the following view
 CREATE VIEW StuDetails
 AS
-    SELECT StudentID, StudentName
-    FROM Student_T;
+    SELECT Registration_T.StudentID, Student_T.StudentName
+    FROM Student_T,Registration_T
+    WHERE Registration_T.StudentID = Student_T.StudentID;
 
 
 
 --3. Becfause of referential integrity... write an SQL assertion that will enforce this constraint
-
+-- Taken care of in the foreign key constraint under section table
 
 --4. Write SQL data definition commands for each of the following
 --a. how would you add an attribute, Class, to the Student table?
