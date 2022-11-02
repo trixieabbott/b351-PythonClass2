@@ -262,14 +262,38 @@ class KNN_Classifier:
     ##################################################
     # Objective: Return the euclidean distance distance between two points
     def calc_euclidean_distance(self, point_a, point_b):
-        raise NotImplementedError
+        x1 = point_a[0]
+        y1 = point_a[1]
+        x2 = point_b[0]
+        y2 = point_b[1]
+        return math.sqrt( ((x2-x1)**2) + ((y2-y1)**2) )
 
     ##################################################
     # Problem 3b - Pick Label
     ##################################################
     # Objective: Choose the most frequent label out of the labels for the k nearest neighbors
     def get_top_label(self, top_k_labels):
-        raise NotImplementedError
+        d = {}
+        totalsum = 0
+        for num in top_k_labels:
+            if not num in d.keys():
+                d[num] = 1
+            else:
+                d[num] += 1
+            totalsum += 1
+        #we have a dictionary mapping keys to their counts, lets change it to count/total sum
+        prob = {}
+        for k,v in d.items():
+            prob[k] = v/totalsum
+        #now we have a dictionary "prob" mapping keys to count/totalsum
+        maxprobability = prob[top_k_labels[0]] #lets just make the max the first one
+        mostFrequentLabel = top_k_labels[0]
+        for k,v in prob.items():
+            if v > maxprobability:
+                maxprobability = v
+                mostFrequentLabel = k
+        
+        return mostFrequentLabel
 
     ##################################################
     # Problem 3c- Classify
@@ -281,3 +305,6 @@ class KNN_Classifier:
     #  - you may find heappush/pop to be useful to keep track of the k closet neighbors here
     def classify_point(self, point, training_points, training_labels):
         raise NotImplementedError
+
+# hello = KNN_Classifier(5)
+# print(hello.get_top_label([6, 3, 5, 1, 9, 3, 6, 1, 2, 0]))
