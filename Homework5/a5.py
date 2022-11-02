@@ -4,6 +4,7 @@
 # Professor Yijie Wang
 # Do not share these assignments or their solutions outside of this class.
 
+from itertools import count
 import math
 
 # unique takes an iterable and returns
@@ -78,7 +79,45 @@ def calc_entropy(classifications):
 # - It may be a good idea to look up dictionary methods
 
 def calc_information_gain(parent_classifications, classifications_by_val, val_freqs):
-    raise NotImplementedError
+    print(parent_classifications)
+    print(classifications_by_val)
+    print(val_freqs)
+
+    #formula for information gain = entropy(s) - weighted average of entropies for each unique characteristic
+    #lets find entropyS
+    totalcnt = 0
+    for num in parent_classifications:
+        totalcnt += 1
+    entropyS = 0
+    for value in val_freqs.values():
+        print(value/totalcnt)
+        entropyS -= (value/totalcnt) * math.log2(value/totalcnt)
+    
+    print(entropyS)
+    print(calc_entropy(parent_classifications))
+    
+
+    """""
+    entropies = {}
+    #looping through each classification
+    for key, values in classifications_by_val.items():
+        totalCount = 0
+        countforPass = 0
+        for item in values:
+            if item == 1:
+                countforPass += 1
+            totalCount += 1
+        countforFail = totalCount - countforPass
+        entropyA = -(countforPass/totalCount)*math.log2(countforPass/totalCount)
+        entropyA -= (countforFail/totalCount)*math.log2(countforFail/totalCount)
+        entropies += [entropyA]
+
+    print(entropies)
+    result = entropyS
+    for value in val_freqs.values():
+        result -=  (value/totalcnt)*# minus weighted average of entropies
+    return result
+    """
 
 
 ##################################################
