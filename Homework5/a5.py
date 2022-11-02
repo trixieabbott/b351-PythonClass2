@@ -79,9 +79,6 @@ def calc_entropy(classifications):
 # - It may be a good idea to look up dictionary methods
 
 def calc_information_gain(parent_classifications, classifications_by_val, val_freqs):
-    print(parent_classifications)
-    print(classifications_by_val)
-    print(val_freqs)
 
     #formula for information gain = entropy(s) - weighted average of entropies for each unique characteristic
     
@@ -92,7 +89,6 @@ def calc_information_gain(parent_classifications, classifications_by_val, val_fr
     babyentropies = {}
     for key, values in classifications_by_val.items():
         babyentropies[key] = calc_entropy(values)
-    print(babyentropies)
 
     #lets formula for information gain = entropy(s) - weighted average of entropies for each unique characteristic
     totalcount = sum(val_freqs.values())
@@ -163,7 +159,29 @@ class Node:
     # a point is a dictionary of each attribute for the point mapped to the attribute's value
 
     def classify_point(self, point):
-        raise NotImplementedError
+        if self.classification:
+            return self.classification
+        else:
+            #print(self.attribute)
+            value = point[self.attribute]
+            for key, child in self.children.items():
+                if value == key:
+                    return child.classify_point(point)
+            return 5
+            #return self.children[OTHER].classify_point(point)
+        
+
+        """""
+        else:
+            # if point[self.attribute] is None:
+            #     print("test")
+            print(self.attribute,point)
+            value = point[self.attribute]
+            if value in self.children.keys():
+                return self.children[value].classify_point(point)
+            else:
+                return self.children[OTHER].classify_point(point)
+        """
 
 
     ##################################################
