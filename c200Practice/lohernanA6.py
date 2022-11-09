@@ -141,8 +141,22 @@ def A(m, n):
 # Problem 8
 # Input: x and stop
 # Output: Approximated value of sin(x) until stop
-def ii(x, stop):
-    pass
+# def ii(x, stop):
+#     def factorial(n):
+#         if n ==0:
+#             return 1
+#         else:
+#             return n*factorial(n-1)
+    
+#     sum=0
+#     i =0
+#     while i <=stop:
+#         if i%2 ==0:
+#             sum +=((1*i)*((x**(2*i+1))/factorial((2*i)+1)))
+#         else:
+#             sum += ((-1**i)*((x**(2*i))/factorial((2*i)+1)))
+#         i+1
+#     return sum 
 
 # Implement as per HW pdf instructions.
 # Will produce output equal to equation-32 but with loop.
@@ -296,77 +310,77 @@ if __name__ == "__main__":
     # print(f"    b, c")
     # for i in range(1,10):
     #     print(f"{i}: {b(i),c(i)}")
-    # s, p,     d
-    # 0: (0, 10000, 1)
-    # 1: (1, 10200.0, 4)
-    # 2: (3, 10404.0, 13)
-    # 3: (6, 10612.08, 40)
-    # 4: (10, 10824.3216, 121)
-    # 5: (15, 11040.808031999999, 364)
-    # 6: (21, 11261.62419264, 1093)
-    # 7: (28, 11486.8566764928, 3280)
-    # 8: (36, 11716.593810022656, 9841)
-    # 9: (45, 11950.925686223109, 29524)
-    #     b, c
-    # 1: (2, 9)
-    # 2: (3, 82)
-    # 3: (5, 756)
-    # 4: (8, 7048)
-    # 5: (13, 66384)
-    # 6: (21, 631072)
-    # 7: (34, 6048576)
-    # 8: (55, 58388608)
-    # 9: (89, 567108864)
+    # # s, p,     d
+    # # 0: (0, 10000, 1)
+    # # 1: (1, 10200.0, 4)
+    # # 2: (3, 10404.0, 13)
+    # # 3: (6, 10612.08, 40)
+    # # 4: (10, 10824.3216, 121)
+    # # 5: (15, 11040.808031999999, 364)
+    # # 6: (21, 11261.62419264, 1093)
+    # # 7: (28, 11486.8566764928, 3280)
+    # # 8: (36, 11716.593810022656, 9841)
+    # # 9: (45, 11950.925686223109, 29524)
+    # #     b, c
+    # # 1: (2, 9)
+    # # 2: (3, 82)
+    # # 3: (5, 756)
+    # # 4: (8, 7048)
+    # # 5: (13, 66384)
+    # # 6: (21, 631072)
+    # # 7: (34, 6048576)
+    # # 8: (55, 58388608)
+    # # 9: (89, 567108864)
 
-    #problem 2
+    # #problem 2
     # prob2 = [[0,1,-1],[10],[11,10,9,8]]
     # for i in prob2:
-    #     print(f"{i} {MIN(i)}")
-    # [0, 1, -1] -1
-    # [10] 10
-    # [11, 10, 9, 8] 8
+    #      print(f"{i} {MIN(i)}")
+    # #[0, 1, -1] -1
+    # #    [10] 10
+    # #[11, 10, 9, 8] 8
 
-    #problem 3
+    # #problem 3
     # prob3 = ['c1',"C1","7De","7dE","10F"]
     # for i in prob3:
     #     print(f"{i} {hex_dec(i)} {int(i,16)}") 
-    # c1 193 193
-    # C1 193 193
-    # 7De 2014 2014
-    # 7dE 2014 2014
-    # 10F 271 271
+    # #c1 193 193
+    # # C1 193 193
+    # # 7De 2014 2014
+    # # 7dE 2014 2014
+    # # 10F 271 271
 
-    #problem 4
+    # #problem 4
     # for i in range(14):
     #     b2,b3,b4 = c_(i,2),c_(i,3),c_(i,4)
-    #     print(f"{int(b2,2)} {b2}, {int(b3,3)} {b3}, {int(b4,4)} {b4}")
+    # print(f"{int(b2,2)} {b2}, {int(b3,3)} {b3}, {int(b4,4)} {b4}")
 
-    #problem 5
-    # lst = [1,1,1,2,2,0]
-    # print(rr(1,lst))
-    # for i in [4,3,1]:
-    #     print(oal(1,i,lst))
+    # #problem 5
+    # #lst = [1,1,1,2,2,0]
+    # #print(rr(1,lst))
+    # #for i in [4,3,1]:
+    # #     print(oal(1,i,lst))
 
-    #problem 6
+    # #problem 6
     # data = ["ABBa","ratsliveonnoevilstar", "ATOYOTA","ccc","cc","ccedc",]
     # for d in data:
     #     print(mystic(d))
 
-    #problem 7
+    # #problem 7
     # for i in range(4):
-    #     for j in range(4):
-    #         print(f"A({i,j}) = {A(i,j)},  ", end="")
-    ###when you have time: print(A(4,1))
+    #      for j in range(4):
+    #          print(f"A({i,j}) = {A(i,j)},  ", end="")
+    # ###when you have time: print(A(4,1))
 
-    #problem 8
+    # #problem 8
     # x,stop = math.pi/4,5
-    # print(ii(x,stop))
+    # #print(ii(x,stop))
     # print(math.sin(x))
     # print(iii(5))
     # print(iv(5))
     # print(vi(math.pi,5))
 
-    #problem 9
+    # #problem 9
     # print("Model I:\n", env(I))
     # print("Model J:\n", env(J))
     # print("Model K:\n", env(K))

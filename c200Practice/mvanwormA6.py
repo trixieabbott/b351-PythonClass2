@@ -1,8 +1,9 @@
 import math
+from re import X
 import random as rn
 
 # Name of your programmig partner
-# Name:
+# Name: Michael Van Wormer
 
 # Problem 1
 # Recursive functions
@@ -10,51 +11,52 @@ import random as rn
 # for each of the functions below.
 def s(n):
     if n == 0:
-        return n 
+        return 0
     else:
-        return s(n-1) + n
+        return n + s(n-1)
 
 def p(n):
-    if n ==0:
+    if n == 0:
         return 10000
     else:
-        return p(n-1) + 0.02*p(n-1)
+        return p(n - 1) + 0.02*p(n - 1)
 
 def b(n):
-    if n == 2 or n ==1:
-        return n+1
+    if n == 1:
+        return 2
+    elif n == 2:
+        return 3
     else:
-        return b(n-1) + b(n-2)
+        return b(n - 1) + b(n-2)
 
 def c(n):
     if n == 1:
         return 9
     else:
-        return 9*c(n -1) + 10**n-1-c(n - 1)
-
+        return 9 * c(n - 1) + 10**(n - 1) - c(n - 1)
 
 def d(n):
-    if n ==0:
+    if n == 0:
         return 1
     else:
-        return 3*d(n -1) + 1
-
+        3 * d(n - 1) + 1
 
 
 # Problem 2
 # Implement via equation 19 in HW PDF.
 def min(x,y):
-    if x<y:
-        return x 
-    elif y<=x:
+    if x < y:
+        return x
+    elif y <= x:
         return y
 
 # Implement via equation 20-21 as per the instructios in the PDF.
 def MIN(lst):
-    if len(lst)==1:
-        return lst[0]
+    if [lst] == lst:
+        return lst
     else:
-        return min(lst[0], MIN(lst[1:]))
+        return min([x, MIN[y]])
+
 
 
 
@@ -62,69 +64,48 @@ def MIN(lst):
 # Input: A string in hexadecimal format
 # Output: The deciaml (integer) equivalent of the input
 def hex_dec(hex):
-    whex = hex.upper()
-    C_value ={'0':0,'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'A':10,'B':11,'C':12,'D':13,'E':14,'F':15}
-    power = len(hex) - 1
-    decVal = 0
-    for i in whex:
-        decVal = decVal +C_value[i]*(16**power)
-        power = power - 1
-    return decVal
+    return int(hex, 0)
     
 
 # Problem 4
 # Input: A number (decimal format) and base
 # Output: The string representation of the converted number in base.
 def c_(dn, base):
-    if(dn==0):
-        return ""
-    if (dn==1):
-        return '1'
-    else:
-        return c_(dn//base, base)+ str(dn%base)
+    pass
 
 
 # Problem 5
 # Input: An object x and a list
 # Output: List with all occurences of x removed
 def rr(x,lst):
-    if len(lst)==0:
-        return []
-    elif lst[0]!=x:
-        return [lst[0]]+rr(x,lst[1:])
+    if [x] == lst:
+        return rr(lst)
     else:
-        return rr(x,lst[1:])
-
+        return [x] + rr(x, lst)
 
 
 # Input: An object x, non-negative number n, and a list
 # Output: A boolean indicating if x appeared at-least n times or not in the list
 def oal(x, n, lst):
-    def o_(x,n,lst):
-        if len(lst)==0:
-            return n
-        elif lst[0] != x:
-            return o_(x,n,lst[1:])
-        elif lst[0]==x:
-            return o_(x,n-1,lst[1:])
-    
-    if o_(x,n,lst)<=0:
-        return True
-    return False
-    
+    # Create your local function here o_() and call it with required arguments.
+    # You can use the value returned by o_(), as the final return value of oal() as well.
+    def o_(lst, cnt):
+        cnt >= n
+        if x == lst[0]:
+            return o_(lst[1:], cnt + 1)
+        else:
+            return o_(lst[1:], cnt)
 
 
 # Problem 6
 # Implement a non-arcane recursive version of mystic
 def mystic(xstr):
-    if len(xstr)==1:
-        return True
-    elif len(xstr)== 2 and xstr[0]==xstr[1]:
-        return True
-    elif xstr[0]== xstr[len(xstr)-1]:
-        return mystic(xstr[1:len(xstr)-1])
+    if d == 1:
+        return len(xstr) == 1
+    elif d == 2:
+        return (len(xstr) == 2 and xstr[0] == xstr[1])
     else:
-        return False
+        return (xstr[0] == xstr[len(xstr) - 1] and mystic(xstr[1:len(xstr) - 1]))
 
 
 # Problem 7
@@ -132,10 +113,10 @@ def mystic(xstr):
 def A(m, n):
     if m == 0:
         return n + 1
-    elif m != 0 and n==0:
-        return A(m-1,1)
-    elif m!= 0 and n!=0:
-        return A(m-1, A(m,n-1))
+    elif n == 1:
+        return A(m + 1, 0)
+    else:
+        return A(m, A(m + 1, n))
  
 
 # Problem 8
@@ -149,44 +130,35 @@ def ii(x, stop):
 def iii(stop):
     def closed(n):
         return (1/4)*(n**2)*(n+1)**2
-    sum = 0
-    for i in range(1,stop+1):
-        sum+= i**3
-    return [sum,closed(stop)]
+    pass
 
 # Implement as per HW pdf instructions.
 # Will produce output equal to equation-33 but with loop.
 def iv(stop):
     def closed(n):
         return (1/2)*n*(6*(n**2)-(3*n)-1)
-    sum =0
-    for i in range(1,stop+1):
-        sum+= i**3
-    return [sum,closed(stop)]
+    pass
 
 # Implement as per HW pdf instructions. 
 # Will produce output equal to equation-34 but with loop. 
 def vi(x,stop):
     def closed(x,n):
         return math.sin(x*(2**n))/((2**n)*math.sin(x))
-    prod =1
-    for i in range(1,stop+1):
-        prod += math.cos((2**(i-1))*x)
-    return[prod, closed(x,stop)]
+    pass    
 
 # Problem 9
 # Implement the model as per the instructions in HW PDF.
 def I(t):
-    return (5*(t**2)+t+400)/(2*(t**2)+2*t+90)
+    return ((5*(t**2)) + t + 400) / ((2*(t**2) + (2*t) + 90))
 
 # Implement the model as per the instructions in HW PDF.
 def J(t):
-    data =[30.0,59.00,58.99,55.26,53.85,52.8,52.17,51.55,49.00,46.26,43.52,50.76]
     return data[t]
+data = [60.0,59.00,58.00,55.26,53.85,52.8,52.17,51.55,49.00,46.26,43.52,50.76]
 
 # Implement the model as per the instructions in HW PDF.
 def K(t):
-    return (50*(t**2)+600)/((t**2)+10)
+    return (50*(t**2) + 600) / ((t**2) + 10)
 
 # Input: a model
 # Output: List of months and quality index for those months (formatted as per the output in HW PDF)
@@ -194,17 +166,13 @@ def env(f):
     
     months = ["Jan", "Feb", "Mar", "Apr", "May",
               "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    minimum = float("inf")
-    outMonths = []
-    for i in range(len(months)):
-        dif = round(f(i)- f(i-1),2)
-        if dif < minimum:
-            outMonths.append(months[i])
-            outMonths.append(months[i-1])
-        elif dif == minimum:
-            outMonths.append(months[i])
-            outMonths.append(months[i-1])
-        return [outMonths, minimum]
+    for i in months:
+        if f == I:
+            return I(data[i])
+        elif f == J:
+            return J(data[i])
+        elif f == K:
+            return K(data[i])
 
 
 # Problem-10 is not graded.

@@ -2,7 +2,7 @@ import math
 import random as rn
 
 # Name of your programmig partner
-# Name:
+# Name: 
 
 # Problem 1
 # Recursive functions
@@ -10,43 +10,44 @@ import random as rn
 # for each of the functions below.
 def s(n):
     if n == 0:
-        return n 
+        return 0
     else:
         return s(n-1) + n
 
 def p(n):
-    if n ==0:
+    if n == 0:
         return 10000
     else:
         return p(n-1) + 0.02*p(n-1)
 
 def b(n):
-    if n == 2 or n ==1:
-        return n+1
+    if n == 1:
+        return 2
+    elif n == 2:
+        return 3
     else:
         return b(n-1) + b(n-2)
+
 
 def c(n):
     if n == 1:
         return 9
     else:
-        return 9*c(n -1) + 10**n-1-c(n - 1)
-
+        return 9*c(n-1) + 10**(n-1) - c(n-1)
 
 def d(n):
-    if n ==0:
+    if n == 0:
         return 1
     else:
-        return 3*d(n -1) + 1
-
+        return 3*d(n-1) + 1
 
 
 # Problem 2
 # Implement via equation 19 in HW PDF.
 def min(x,y):
     if x<y:
-        return x 
-    elif y<=x:
+        return x
+    else:
         return y
 
 # Implement via equation 20-21 as per the instructios in the PDF.
@@ -54,7 +55,8 @@ def MIN(lst):
     if len(lst)==1:
         return lst[0]
     else:
-        return min(lst[0], MIN(lst[1:]))
+        return min(lst[0],MIN(lst[1:]))
+
 
 
 
@@ -62,87 +64,102 @@ def MIN(lst):
 # Input: A string in hexadecimal format
 # Output: The deciaml (integer) equivalent of the input
 def hex_dec(hex):
-    whex = hex.upper()
-    C_value ={'0':0,'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'A':10,'B':11,'C':12,'D':13,'E':14,'F':15}
+    u = hex.upper()
+    val = {'O':0, '1':1, '2':2, '3':3, '4':4,'5':5, '6':6, '7':7, '8':8, '9':9, 'A':10, 'B':11, 'C':12, 'D':13, 'E':14, 'F':15}
     power = len(hex) - 1
-    decVal = 0
-    for i in whex:
-        decVal = decVal +C_value[i]*(16**power)
-        power = power - 1
-    return decVal
+    dec = 0 
+    for i in u:
+        dec = dec + val[i]
+        power -= 1
+    return dec
+
     
 
 # Problem 4
 # Input: A number (decimal format) and base
 # Output: The string representation of the converted number in base.
 def c_(dn, base):
-    if(dn==0):
+    if (dn == 0):
         return ""
-    if (dn==1):
-        return '1'
+    if (dn == 1):
+        return "1"
     else:
-        return c_(dn//base, base)+ str(dn%base)
+        return c_(dn//base, base) + str(dn % base)
+    
+    for i in range(1,14):
+        b2,b3,b4 = c_(i,2), c_(i,3), c_(i,4)
+        print(f"{int(b2,2)} {b2},{int(b3,3)}{b3},{int(b4,4)} {b4}")
 
 
 # Problem 5
 # Input: An object x and a list
 # Output: List with all occurences of x removed
 def rr(x,lst):
-    if len(lst)==0:
+    y = 0
+    if lst == []:
         return []
-    elif lst[0]!=x:
-        return [lst[0]]+rr(x,lst[1:])
     else:
-        return rr(x,lst[1:])
-
+        if lst[y] == x:
+            return rr(x,lst[y+1:])
+        else:
+            return [lst[y]] + rr(x,lst[y+1:])
 
 
 # Input: An object x, non-negative number n, and a list
 # Output: A boolean indicating if x appeared at-least n times or not in the list
 def oal(x, n, lst):
-    def o_(x,n,lst):
-        if len(lst)==0:
-            return n
-        elif lst[0] != x:
-            return o_(x,n,lst[1:])
-        elif lst[0]==x:
-            return o_(x,n-1,lst[1:])
-    
-    if o_(x,n,lst)<=0:
-        return True
-    return False
-    
+    # Create your local function here o_() and call it with required arguments.
+    # You can use the value returned by o_(), as the final return value of oal() as well.
+    pass
 
 
 # Problem 6
 # Implement a non-arcane recursive version of mystic
 def mystic(xstr):
-    if len(xstr)==1:
-        return True
-    elif len(xstr)== 2 and xstr[0]==xstr[1]:
-        return True
-    elif xstr[0]== xstr[len(xstr)-1]:
-        return mystic(xstr[1:len(xstr)-1])
+    if len (xstr) == 1:
+        return True 
+    elif len(xstr) == 2 and xstr[0] == xstr[1]:
+        return True 
     else:
-        return False
+        if xstr[0] == xstr[len(xstr)-1]:
+            if mystic(xstr[1:len(xstr)-1]) == True:
+                return True 
+            else:
+                return False
+        else:
+            return False
 
 
 # Problem 7
 # Implement the recursion as per the HW PDF instructions.
 def A(m, n):
-    if m == 0:
+    if (m==0):
         return n + 1
-    elif m != 0 and n==0:
-        return A(m-1,1)
-    elif m!= 0 and n!=0:
-        return A(m-1, A(m,n-1))
+    elif (n == 0):
+        return A(m,1)
+    else:
+        return A(m,A(m+1,n))
  
 
 # Problem 8
 # Input: x and stop
 # Output: Approximated value of sin(x) until stop
 def ii(x, stop):
-    pass
+    def factorial(n):
+        if n == 0:
+            return 1
+        else:
+            return n * factorial(n-1)
+    
+    sum = 0
+    i = 0
+    while i <= stop: 
+        if i % 2 == 0:
+            sum += ((1**i) * ((x**(2*i + 1))/factorial((2*i)+1)))
+        else:
+            sum += ((-1**i) * ((x**(2*i + 1))/factorial((2*i)+ 1)))
+        i += 1
+    return sum 
 
 # Implement as per HW pdf instructions.
 # Will produce output equal to equation-32 but with loop.
@@ -151,42 +168,43 @@ def iii(stop):
         return (1/4)*(n**2)*(n+1)**2
     sum = 0
     for i in range(1,stop+1):
-        sum+= i**3
-    return [sum,closed(stop)]
+        sum += (i)**3
+    return [round(int(sum),2),round(closed(stop),2)]
 
 # Implement as per HW pdf instructions.
 # Will produce output equal to equation-33 but with loop.
 def iv(stop):
     def closed(n):
         return (1/2)*n*(6*(n**2)-(3*n)-1)
-    sum =0
-    for i in range(1,stop+1):
-        sum+= i**3
-    return [sum,closed(stop)]
+    sum = 0
+    for i in range(1,stop +1):
+        sum += ((3*i)-2)**2
+    return [round(int(sum),2), round(closed(stop),2)]
 
 # Implement as per HW pdf instructions. 
 # Will produce output equal to equation-34 but with loop. 
 def vi(x,stop):
     def closed(x,n):
         return math.sin(x*(2**n))/((2**n)*math.sin(x))
-    prod =1
+    prod = 1
     for i in range(1,stop+1):
-        prod += math.cos((2**(i-1))*x)
-    return[prod, closed(x,stop)]
+        prod = prod * math.cos(x*(2*(i-1)))
+    return [round(prod,2),round(closed(x,stop),2)]
+
 
 # Problem 9
 # Implement the model as per the instructions in HW PDF.
 def I(t):
-    return (5*(t**2)+t+400)/(2*(t**2)+2*t+90)
+    return ((5* t** 2 + t + 400)/(2 * t**2 + 2*t + 90))
 
 # Implement the model as per the instructions in HW PDF.
 def J(t):
-    data =[30.0,59.00,58.99,55.26,53.85,52.8,52.17,51.55,49.00,46.26,43.52,50.76]
+    data = [60.0, 59.0, 58.0, 55.26, 53.85, 52.17, 51.55, 49.00, 46.26, 43.52, 50.76]
     return data[t]
 
 # Implement the model as per the instructions in HW PDF.
 def K(t):
-    return (50*(t**2)+600)/((t**2)+10)
+    return (50* t**2 + 600/t**2 + 10)
 
 # Input: a model
 # Output: List of months and quality index for those months (formatted as per the output in HW PDF)
@@ -194,17 +212,7 @@ def env(f):
     
     months = ["Jan", "Feb", "Mar", "Apr", "May",
               "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    minimum = float("inf")
-    outMonths = []
-    for i in range(len(months)):
-        dif = round(f(i)- f(i-1),2)
-        if dif < minimum:
-            outMonths.append(months[i])
-            outMonths.append(months[i-1])
-        elif dif == minimum:
-            outMonths.append(months[i])
-            outMonths.append(months[i-1])
-        return [outMonths, minimum]
+    pass
 
 
 # Problem-10 is not graded.
@@ -290,12 +298,12 @@ if __name__ == "__main__":
     Please add some of your own tests too for good testing
     '''
     #Problem 1
-    # print(f"    s, p,     d")
-    # for i in range(10):
-    #     print(f"{i}: {s(i),p(i),d(i)}")
-    # print(f"    b, c")
-    # for i in range(1,10):
-    #     print(f"{i}: {b(i),c(i)}")
+    print(f"    s, p,     d")
+    for i in range(10):
+       print(f"{i}: {s(i),p(i),d(i)}")
+    print(f"    b, c")
+    for i in range(1,10):
+        print(f"{i}: {b(i),c(i)}")
     # s, p,     d
     # 0: (0, 10000, 1)
     # 1: (1, 10200.0, 4)

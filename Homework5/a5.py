@@ -4,6 +4,7 @@
 # Professor Yijie Wang
 # Do not share these assignments or their solutions outside of this class.
 
+import heapq
 from itertools import count
 import math
 
@@ -163,12 +164,15 @@ class Node:
             return self.classification
         else:
             #print(self.attribute)
-            value = point[self.attribute]
             for key, child in self.children.items():
-                if value == key:
-                    return child.classify_point(point)
-            return 5
-            #return self.children[OTHER].classify_point(point)
+                #print(child)
+                if self.attribute is not None:
+                    value = point[self.attribute]
+                    if value == key:
+                        return child.classify_point(point)
+            #return 5
+                else:
+                    return self.children[OTHER].classify_point(point)
         
 
         """""
@@ -304,7 +308,21 @@ class KNN_Classifier:
     #  - sample points and sample_labels correspond with each other
     #  - you may find heappush/pop to be useful to keep track of the k closet neighbors here
     def classify_point(self, point, training_points, training_labels):
-        raise NotImplementedError
-
-# hello = KNN_Classifier(5)
-# print(hello.get_top_label([6, 3, 5, 1, 9, 3, 6, 1, 2, 0]))
+        # dictOfPtsToLabels = {}
+        # for i in range(len(training_points)):
+        #     keyToAdd = training_points[i]
+        #     valueToAdd = training_labels[i]
+        #     dictOfPtsToLabels[keyToAdd] = valueToAdd
+        # sortedDict = sorted(dictOfPtsToLabels.items(), key = lambda kv: self.calc_euclidean_distance(kv[0],point))
+        # print(sortedDict)
+        for samplepoint in training_points:
+            self.calc_euclidean_distance(samplepoint,point)
+        
+        """""
+        sortedList = sorted(training_points,key= lambda x: self.calc_euclidean_distance(x,point))
+        sortedListonlyK = sortedList[0:self.k]
+        #print(self.k)
+        #print(sortedListonlyK)
+        """
+        mostfrequentlabel = self.get_top_label(training_labels)
+        return mostfrequentlabel

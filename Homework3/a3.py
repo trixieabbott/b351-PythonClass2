@@ -45,7 +45,7 @@ def expand_fringe(current_state, fringe):
     #seeing if these moves will work on theboard
     for move in list:
         if theboard.slide_blank(move):
-            fringe.append(State.State(theboard.slide_blank(move), current_state, 0, current_state.depth+1))
+            fringe.append(State.State(theboard.slide_blank(move), current_state, current_state.depth+1, 0 ))
 
 
 ########################################
@@ -67,11 +67,12 @@ def breadth_first_search(fringe, max_depth, goal_board):
         #pops the first state in the fringe
         currstate = fringe.pop(0)
         #checks if goal board
-        if (currstate.board == goal_board):
+        if (currstate.depth > max_depth):
+            return CONTINUE
+        elif (currstate.board == goal_board):
             return currstate
         #ignores states deepr than max depth
-        elif (currstate.depth > max_depth):
-            return CONTINUE
+        
         #expands the fringe
         else:
             expand_fringe(currstate,fringe)
@@ -163,7 +164,7 @@ def my_heuristic(current_board, goal_board):
             if current_board.matrix[i][j] != goal_board.matrix[i][j]:
                 sum += 1
     
-    return sum - 1
+    return sum
 
 #################################
 # Problem 6 - Informed Expansion
@@ -190,7 +191,7 @@ def informed_expansion(current_state, fringe, f_function):
     #seeing if these moves will work on theboard
     for move in list:
         if theboard.slide_blank(move):
-            heapq.heappush(fringe,State.State(theboard.slide_blank(move), current_state, 0, f_function))
+            heapq.heappush(fringe,State.State(theboard.slide_blank(move), current_state, current_state.depth+1, f_function(current_state.board,current_state.depth)))
 
 
 #################################
@@ -211,21 +212,19 @@ def informed_search(fringe, goal_board, f_function, explored):
         #step 2 uses heapop ot get the highest priority state from the fringe
         currstate = heapq.heappop(fringe)
         #step 5 returns goal sttate when found
+
+        #checking if in the dictionary:
+        if (currstate.board in explored):
+            if (f_function(currstate.board,currstate.depth) < explored[currstate.board]): #if it is less
+                explored[currstate.board] = f_function(currstate.board,currstate.depth)
+            else: #if in the dictionary and greater than
+                return CONTINUE
+        
+        #step 6
         if (currstate.board == goal_board):
             return currstate
 
-        #not sure how to use this
-        theFunction = a_star_f_function_factory(f_function,goal_board)
-
-        #step 3:
-        if (theFunction(currstate)>=explored[currstate]):#is not smaller than previous f value):
-            return CONTINUE
-
-        #step 4
-        explored[currstate.board].append(theFunction(currstate))
-        #step 6
-        
-        informed_expansion(currstate,fringe,theFunction)
+        informed_expansion(currstate,fringe,f_function)
         return CONTINUE
 
 
