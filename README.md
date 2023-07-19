@@ -1,4 +1,4 @@
-# b351
+# B351 README
 
 This repository contains all of the work completed in CSCI-B 351, Introduction to Artificial Intelligence, at Indiana University.
 
